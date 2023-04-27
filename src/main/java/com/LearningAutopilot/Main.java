@@ -1,29 +1,62 @@
 package com.LearningAutopilot;
 
-import com.LearningAutopilot.UI.*;
+import com.LearningAutopilot.Exceptions.InvalidConfigException;
+import com.LearningAutopilot.UI.ComponentUtil;
+import com.LearningAutopilot.UI.Dialogs.AboutDialog;
+import com.LearningAutopilot.UI.Dialogs.DatabaseConnectionDialog;
+import com.LearningAutopilot.UI.Forms.LoginForm;
+import com.LearningAutopilot.UI.MainFrame;
+import com.LearningAutopilot.UI.UiConsts;
+import com.formdev.flatlaf.extras.FlatDesktop;
 import com.formdev.flatlaf.intellijthemes.FlatGruvboxDarkSoftIJTheme;
+import com.formdev.flatlaf.util.SystemInfo;
+
 import javax.swing.*;
-import java.awt.*;
 
 public class Main {
     public static MainFrame mainFrame;
 
     public static void main(String[] args) {
+        if (SystemInfo.isMacOS) {
+            prepareForMacOS();
+        }
         FlatGruvboxDarkSoftIJTheme.setup();
 
         mainFrame = new MainFrame();
         mainFrame.init();
-        //mainFrame.add(something);
-        mainFrame.pack();
-        mainFrame.setVisible(true);
         mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
+        mainFrame.add(LoginForm.getInstance().getMainPanel());
+        LoginForm.getInstance().init();
 
-        /*Init.initGlobalFont();
-        mainFrame.setContentPane(MainWindow.getInstance().getMainPanel());
-        MainWindow.getInstance().init();
-        Init.initAllTab();
-        Init.initOthers();
-        mainFrame.remove(loadingPanel);*/
+        mainFrame.setVisible(true);
+
+        restoreDatabaseConfig();
+    }
+
+    private static void restoreDatabaseConfig() {
+        try {
+            DatabaseConfig.getInstance().restoreConfig();
+        } catch (InvalidConfigException e) {
+            DatabaseConnectionDialog dialog = new DatabaseConnectionDialog();
+
+            dialog.pack();
+            ComponentUtil.locateToCenter(dialog);
+            dialog.setVisible(true);
+        }
+    }
+
+    public static void prepareForMacOS() {
+        System.setProperty("apple.laf.useScreenMenuBar", "true");
+        System.setProperty("apple.awt.application.name", UiConsts.APP_NAME);
+        System.setProperty("com.apple.mrj.application.apple.menu.about.name", UiConsts.APP_NAME);
+
+        FlatDesktop.setAboutHandler(() -> {
+            AboutDialog dialog = new AboutDialog();
+
+            dialog.pack();
+            ComponentUtil.locateToCenter(dialog);
+            dialog.setVisible(true);
+        });
     }
 }

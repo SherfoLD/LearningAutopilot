@@ -15,7 +15,10 @@
 
         <flatlaf.version>3.1.1</flatlaf.version>
         <flatlaf-intellij-themes.version>3.1.1</flatlaf-intellij-themes.version>
-        <mssql-jdbc.version>12.2.0.jre11</mssql-jdbc.version>
+        <flatlaf-extras.version>3.1.1</flatlaf-extras.version>
+        <forms_rt.version>7.0.3</forms_rt.version>
+        <lombok.version>1.18.26</lombok.version>
+        <postgresql.version>42.6.0</postgresql.version>
     </properties>
 
     <dependencies>
@@ -32,9 +35,28 @@
         </dependency>
 
         <dependency>
-            <groupId>com.microsoft.sqlserver</groupId>
-            <artifactId>mssql-jdbc</artifactId>
-            <version>${mssql-jdbc.version}</version>
+            <groupId>com.formdev</groupId>
+            <artifactId>flatlaf-extras</artifactId>
+            <version>${flatlaf-extras.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.intellij</groupId>
+            <artifactId>forms_rt</artifactId>
+            <version>${forms_rt.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>${lombok.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>${postgresql.version}</version>
         </dependency>
     </dependencies>
 

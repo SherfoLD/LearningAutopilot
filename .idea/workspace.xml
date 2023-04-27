@@ -4,19 +4,26 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="8703f918-a2fa-4c3a-922d-0fd6c14d1db5" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/Main.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/UI/ComponentUtil.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/UI/MainFrame.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/UI/UiConsts.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/pictures/cpu.svg" afterDir="false" />
+    <list default="true" id="8703f918-a2fa-4c3a-922d-0fd6c14d1db5" name="Changes" comment="Empty main Frame with proper width, height and screen position created">
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/DatabaseConfig.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/DatabaseConnection.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/Exceptions/InvalidConfigException.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/UI/Dialogs/AboutDialog.form" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/UI/Dialogs/AboutDialog.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/UI/Dialogs/DatabaseConnectionDialog.form" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/UI/Dialogs/DatabaseConnectionDialog.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/UI/Forms/DatabaseInteractionForm.form" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/UI/Forms/DatabaseInteractionForm.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/UI/Forms/LoginForm.form" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/UI/Forms/LoginForm.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/UI/TopMenuBar.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/UI/ComponentUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/UI/ComponentUtil.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/UI/MainFrame.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/UI/MainFrame.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/UI/UiConsts.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/UI/UiConsts.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/pictures/cpu.svg" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -41,7 +48,7 @@
     </option>
   </component>
   <component name="ProblemsViewState">
-    <option name="selectedTabId" value="ProjectErrors" />
+    <option name="selectedTabId" value="CurrentFile" />
   </component>
   <component name="ProjectId" id="2Opu0AP9YqxhO6xVdF1FkHODtiF" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
@@ -56,6 +63,7 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "UI_DESIGNER_EDITOR_MODE.PaletteManager.SHOW": "true",
     "WebServerToolWindowFactoryState": "false",
     "last_opened_file_path": "/Users/bat/Desktop/InteliJ_IDEA/Kursovaya/src/main/resources/pictures",
     "node.js.detected.package.eslint": "true",
@@ -65,14 +73,68 @@
     "project.structure.last.edited": "SDKs",
     "project.structure.proportion": "0.0",
     "project.structure.side.proportion": "0.0",
-    "settings.editor.selected.configurable": "preferences.editor",
+    "settings.editor.selected.configurable": "project.propGUI",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
   <component name="RecentsManager">
+    <key name="CreateClassDialog.RecentsKey">
+      <recent name="com.LearningAutopilot.Exceptions" />
+    </key>
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/src/main/resources/pictures" />
     </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/UI/Forms" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Application.Main">
+    <configuration name="AboutDialog" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.LearningAutopilot.UI.Dialogs.AboutDialog" />
+      <module name="Kursovaya" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.LearningAutopilot.UI.Dialogs.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="DatabaseConnectionDialog" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.LearningAutopilot.UI.Dialogs.DatabaseConnectionDialog" />
+      <module name="Kursovaya" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.LearningAutopilot.UI.Dialogs.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.LearningAutopilot.Main" />
+      <module name="Kursovaya" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.LearningAutopilot.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Application.Main" />
+        <item itemvalue="Application.DatabaseConnectionDialog" />
+        <item itemvalue="Application.AboutDialog" />
+      </list>
+    </recent_temporary>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
@@ -83,11 +145,40 @@
       <option name="presentableId" value="Default" />
       <updated>1682269620375</updated>
       <workItem from="1682269621552" duration="920000" />
-      <workItem from="1682270662550" duration="3044000" />
+      <workItem from="1682270662550" duration="10977000" />
+      <workItem from="1682327723230" duration="48658000" />
     </task>
+    <task id="LOCAL-00001" summary="Empty main Frame with proper width, height and screen position created">
+      <created>1682273847054</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1682273847054</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Empty main Frame with proper width, height and screen position created" />
+    <option name="LAST_COMMIT_MESSAGE" value="Empty main Frame with proper width, height and screen position created" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/LearningAutopilot/UI/Dialogs/DatabaseConnectionDialog.java</url>
+          <line>42</line>
+          <option name="timeStamp" value="9" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+    <pin-to-top-manager>
+      <pinned-members>
+        <PinnedItemInfo parentTag="com.LearningAutopilot.DatabaseConfig" memberName="DatabaseConfigOnDisk" />
+      </pinned-members>
+    </pin-to-top-manager>
   </component>
 </project>

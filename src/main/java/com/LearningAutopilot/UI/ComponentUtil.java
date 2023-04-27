@@ -16,4 +16,11 @@ public class ComponentUtil {
         Dimension preferSize = new Dimension(preferWidth, preferHeight);
         component.setPreferredSize(preferSize);
     }
+
+    public static void locateToCenter(Component component) {
+        int componentWidth = component.getWidth();
+        int componentHeight = component.getHeight();
+
+        component.setLocation((screenWidth - componentWidth) / 2, (screenHeight - componentHeight) / 2);
+    }
 }
