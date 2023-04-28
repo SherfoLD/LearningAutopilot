@@ -23,12 +23,24 @@ public class DatabaseConnectionDialog extends JDialog {
 
     public DatabaseConnectionDialog() {
         super(Main.mainFrame, "Подключение к БД");
+        setPreviousData();
         setContentPane(contentPane);
         setModal(true);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
         databaseSaveConfigCancelButton.addActionListener(e -> dispose());
         databaseSaveConfigConfirmButton.addActionListener(e -> saveConfig());
+    }
+
+    private void setPreviousData() {
+        DatabaseConfig dbConfig = DatabaseConfig.getInstance();
+        String previousHostName = dbConfig.getDatabaseHostName();
+        int previousPort = dbConfig.getDatabasePort();
+        String previousName = dbConfig.getDatabaseName();
+
+        databaseHostNameField.setText(previousHostName);
+        databasePortSpinner.setValue(previousPort);
+        databaseNameField.setText(previousName);
     }
 
     private void saveConfig() {
@@ -39,13 +51,15 @@ public class DatabaseConnectionDialog extends JDialog {
                 databaseNameField.getText());
         dispose();
 
-        //Убрать ебаный сингл тон
-        Main.mainFrame.removeAll();
-        Main.mainFrame.add(LoginForm.getInstance().getMainPanel());
-        LoginForm.getInstance().init();
+        goToLoginForm();
+    }
+
+    private void goToLoginForm() {
+        Main.mainFrame.getContentPane().removeAll();
+
+        LoginForm loginForm = new LoginForm();
+        Main.mainFrame.add(loginForm.getMainPanel());
         Main.mainFrame.setVisible(true);
-
-
     }
 
     private void createUIComponents() {

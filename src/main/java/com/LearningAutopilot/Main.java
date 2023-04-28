@@ -26,9 +26,8 @@ public class Main {
         mainFrame.init();
         mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        mainFrame.add(LoginForm.getInstance().getMainPanel());
-        LoginForm.getInstance().init();
-
+        LoginForm loginForm = new LoginForm();
+        mainFrame.add(loginForm.getMainPanel());
         mainFrame.setVisible(true);
 
         restoreDatabaseConfig();

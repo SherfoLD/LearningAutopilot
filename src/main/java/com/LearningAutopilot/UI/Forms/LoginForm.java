@@ -6,14 +6,11 @@ import lombok.Getter;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.net.URL;
 import java.sql.SQLException;
 
-@Getter
 public class LoginForm {
-    private static LoginForm loginForm;
+    @Getter
     private JPanel mainPanel;
     private JScrollPane scrollPane;
     private JTextField userLoginField;
@@ -23,42 +20,36 @@ public class LoginForm {
     private JLabel loginPictureLabel;
     private JPasswordField userPasswordField;
 
-    private LoginForm() {
-        userConfirmButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String userLogin = userLoginField.getText();
-                String userPassword = new String(userPasswordField.getPassword());
-                try {
-                    DatabaseConnection.getInstance().initializeConnection(userLogin, userPassword);
+    public LoginForm() {
+        initIcon();
 
-                    Main.mainFrame.getContentPane().removeAll();
-                    Main.mainFrame.add(DatabaseInteractionForm.getInstance().getMainPanel());
-                    Main.mainFrame.setVisible(true);
-                } catch (SQLException ex) {
-                    JOptionPane.showMessageDialog(Main.mainFrame,
-                            ex.getMessage(),
-                            "Inane error",
-                            JOptionPane.ERROR_MESSAGE);
-                }
+        userConfirmButton.addActionListener(e -> {
+            String userLogin = userLoginField.getText();
+            String userPassword = new String(userPasswordField.getPassword());
+            try {
+                DatabaseConnection.getInstance().initializeConnection(userLogin, userPassword);
+            } catch (SQLException ex) {
+                JOptionPane.showMessageDialog(Main.mainFrame,
+                        ex.getMessage(),
+                        "Сбой подключения",
+                        JOptionPane.ERROR_MESSAGE);
+
+                return;
             }
+
+            goToDatabaseInteractionForm();
         });
     }
 
-    public static LoginForm getInstance() {
-        if (loginForm == null) {
-            loginForm = new LoginForm();
-        }
-        return loginForm;
+    private void goToDatabaseInteractionForm() {
+        Main.mainFrame.getContentPane().removeAll();
+
+        DatabaseInteractionForm databaseInteractionForm = new DatabaseInteractionForm();
+        Main.mainFrame.add(databaseInteractionForm.getMainPanel());
+        Main.mainFrame.setVisible(true);
     }
 
-    public static void init() {
-        loginForm = getInstance();
-
-        initIcon();
-    }
-
-    private static void initIcon() {
+    private void initIcon() {
         URL databaseIconURL = LoginForm.class.getResource("/pictures/database_login_icon.png");
         ImageIcon databaseIcon = new ImageIcon(databaseIconURL);
 
@@ -66,7 +57,7 @@ public class LoginForm {
         Image scaledDatabaseImage = databaseImage.getScaledInstance(200, 200, Image.SCALE_SMOOTH);
         databaseIcon = new ImageIcon(scaledDatabaseImage);
 
-        loginForm.loginPictureLabel.setIcon(databaseIcon);
+        loginPictureLabel.setIcon(databaseIcon);
     }
 
 }
