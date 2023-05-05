@@ -41,7 +41,7 @@ public class DatabaseConfig {
         try {
             databasePort = DatabaseConfigOnDisk.getInt("databasePort", 0);
         } catch (IllegalArgumentException e) {
-            throw new InvalidConfigException("Saved database port was in incorrect format");
+            throw new InvalidConfigException("Saved database port was in incorrect format", e);
         }
 
         if (databaseHostName.equals("") || databaseName.equals(""))

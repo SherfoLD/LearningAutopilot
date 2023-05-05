@@ -23,22 +23,24 @@ public class LoginForm {
     public LoginForm() {
         initIcon();
 
-        userConfirmButton.addActionListener(e -> {
-            String userLogin = userLoginField.getText();
-            String userPassword = new String(userPasswordField.getPassword());
-            try {
-                DatabaseConnection.getInstance().initializeConnection(userLogin, userPassword);
-            } catch (SQLException ex) {
-                JOptionPane.showMessageDialog(Main.mainFrame,
-                        ex.getMessage(),
-                        "Сбой подключения",
-                        JOptionPane.ERROR_MESSAGE);
+        userConfirmButton.addActionListener(e -> setupConnection());
+    }
 
-                return;
-            }
+    private void setupConnection() {
+        String userLogin = userLoginField.getText();
+        String userPassword = new String(userPasswordField.getPassword());
 
-            goToDatabaseInteractionForm();
-        });
+        try {
+            DatabaseConnection.getInstance().initializeConnection(userLogin, userPassword);
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(Main.mainFrame,
+                    ex.getMessage(),
+                    "Сбой подключения",
+                    JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        goToDatabaseInteractionForm();
     }
 
     private void goToDatabaseInteractionForm() {
