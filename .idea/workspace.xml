@@ -4,11 +4,15 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="8703f918-a2fa-4c3a-922d-0fd6c14d1db5" name="Changes" comment="Removed unnecessary single tone in LoginForm and DatabaseInteractionForm. Fixed newForm appearance.&#10;Strange bug: FATAL: database &quot;&lt;user&gt;&quot; does not exist.&#10;Need to set MainFrame to single tone">
+    <list default="true" id="8703f918-a2fa-4c3a-922d-0fd6c14d1db5" name="Changes" comment="Small commit before implementing DatabaseInteraction">
+      <change afterPath="$PROJECT_DIR$/.idea/dataSources.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/sqldialects.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/UI/Forms/TableInteractionForm.form" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/UI/Forms/TableInteractionForm.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/DatabaseConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/DatabaseConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/Exceptions/InvalidConfigException.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/Exceptions/InvalidConfigException.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/UI/Forms/LoginForm.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/UI/Forms/LoginForm.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/DatabaseConnection.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/DatabaseConnection.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/UI/Forms/DatabaseInteractionForm.form" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/UI/Forms/DatabaseInteractionForm.form" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/UI/Forms/DatabaseInteractionForm.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/UI/Forms/DatabaseInteractionForm.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -52,6 +56,7 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "UI_DESIGNER_EDITOR_MODE.PaletteManager.SHOW": "true",
+    "UI_DESIGNER_EDITOR_MODE.UIDesignerToolWindowManager.WIDTH": "362",
     "WebServerToolWindowFactoryState": "false",
     "last_opened_file_path": "/Users/bat/Desktop/InteliJ_IDEA/Kursovaya/src/main/resources/pictures",
     "node.js.detected.package.eslint": "true",
@@ -61,8 +66,13 @@
     "project.structure.last.edited": "SDKs",
     "project.structure.proportion": "0.0",
     "project.structure.side.proportion": "0.0",
-    "settings.editor.selected.configurable": "preferences.pluginManager",
+    "settings.editor.selected.configurable": "project.propGUI",
     "vue.rearranger.settings.migration": "true"
+  },
+  "keyToStringList": {
+    "DatabaseDriversLRU": [
+      "postgresql"
+    ]
   }
 }]]></component>
   <component name="RecentsManager">
@@ -135,7 +145,7 @@
       <workItem from="1682269621552" duration="920000" />
       <workItem from="1682270662550" duration="10977000" />
       <workItem from="1682327723230" duration="53545000" />
-      <workItem from="1682683169767" duration="14646000" />
+      <workItem from="1682683169767" duration="48286000" />
     </task>
     <task id="LOCAL-00001" summary="Empty main Frame with proper width, height and screen position created">
       <created>1682273847054</created>
@@ -158,7 +168,14 @@
       <option name="project" value="LOCAL" />
       <updated>1682686218890</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="Small commit before implementing DatabaseInteraction">
+      <created>1683303782334</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1683303782334</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -185,12 +202,14 @@
     <MESSAGE value="Empty main Frame with proper width, height and screen position created" />
     <MESSAGE value="Added basic structure, connection to Postgres and simple login form to setup connection. Need to change Forms from single tones to normal ones" />
     <MESSAGE value="Removed unnecessary single tone in LoginForm and DatabaseInteractionForm. Fixed newForm appearance.&#10;Strange bug: FATAL: database &quot;&lt;user&gt;&quot; does not exist.&#10;Need to set MainFrame to single tone" />
-    <option name="LAST_COMMIT_MESSAGE" value="Removed unnecessary single tone in LoginForm and DatabaseInteractionForm. Fixed newForm appearance.&#10;Strange bug: FATAL: database &quot;&lt;user&gt;&quot; does not exist.&#10;Need to set MainFrame to single tone" />
+    <MESSAGE value="Small commit before implementing DatabaseInteraction" />
+    <option name="LAST_COMMIT_MESSAGE" value="Small commit before implementing DatabaseInteraction" />
   </component>
   <component name="XDebuggerManager">
     <pin-to-top-manager>
       <pinned-members>
         <PinnedItemInfo parentTag="com.LearningAutopilot.DatabaseConfig" memberName="DatabaseConfigOnDisk" />
+        <PinnedItemInfo parentTag="org.postgresql.core.Field" memberName="columnLabel" />
       </pinned-members>
     </pin-to-top-manager>
   </component>
