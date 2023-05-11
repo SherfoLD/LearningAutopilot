@@ -2,20 +2,21 @@ package com.LearningAutopilot.UI.Forms;
 
 import com.LearningAutopilot.DatabaseConnection;
 import com.LearningAutopilot.Main;
+import com.LearningAutopilot.UI.TableHelper.ITableActionEvent;
+import com.LearningAutopilot.UI.TableHelper.PanelAction;
+import com.LearningAutopilot.UI.TableHelper.TableActionCellEditor;
+import com.LearningAutopilot.UI.TableHelper.TableActionCellRenderer;
 import com.intellij.uiDesigner.core.GridConstraints;
 import lombok.Getter;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.net.URL;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+
 
 public class TableInteractionForm {
     @Getter
@@ -65,25 +66,24 @@ public class TableInteractionForm {
         for (int i = 1; i < columnCount + 1; i++) {
             columnNamesArray.add(rs.getMetaData().getColumnName(i));
         }
-        columnNamesArray.add("Edit");
-        columnNamesArray.add("Delete");
-        initTableEditIcon();
-        initTableDeleteIcon();
+        columnNamesArray.add("Actions");
 
         String[] columnNames = columnNamesArray.toArray(new String[0]);
 
         databaseTableModel = new DefaultTableModel(columnNames, 0) {
-            @Override
+            /*@Override
             public boolean isCellEditable(int row, int column) {
+
                 return false;
-            }
+            }*/
         };
 
         while (rs.next()) {
-            ArrayList<String> rowData = new ArrayList<>();
+            ArrayList<Object> rowData = new ArrayList<>();
             for (int i = 1; i < columnCount + 1; i++) {
                 rowData.add(rs.getString(i));
             }
+            rowData.add(new PanelAction());
 
             Object[] row = rowData.toArray();
             databaseTableModel.addRow(row);
@@ -91,42 +91,21 @@ public class TableInteractionForm {
 
     }
 
-    private void initTableDeleteIcon() {
-        URL tableDeleteIconURL = TableInteractionForm.class.getResource("/pictures/table_delete_icon.png");
-        ImageIcon tableDeleteIcon = new ImageIcon(tableDeleteIconURL);
-
-        Image tableDeleteImage = tableDeleteIcon.getImage();
-        Image scaledTableDeleteImage = tableDeleteImage.getScaledInstance(10, 10, Image.SCALE_SMOOTH);
-        tableDeleteIcon = new ImageIcon(scaledTableDeleteImage);
-
-        tableDeleteLabel = new JLabel();
-        tableDeleteLabel.addMouseListener(new MouseAdapter() {
-            public void mouseClicked(MouseEvent me) {
-                System.out.println("CLICKED");
-            }
-        });
-        tableDeleteLabel.setIcon(tableDeleteIcon);
-    }
-
-    private void initTableEditIcon() {
-        URL tableEditIconURL = TableInteractionForm.class.getResource("/pictures/table_edit_icon.png");
-        ImageIcon tableEditIcon = new ImageIcon(tableEditIconURL);
-
-        Image tableEditImage = tableEditIcon.getImage();
-        Image scaledTableEditImage = tableEditImage.getScaledInstance(10, 10, Image.SCALE_SMOOTH);
-        tableEditIcon = new ImageIcon(scaledTableEditImage);
-
-        tableEditLabel = new JLabel();
-        tableEditLabel.addMouseListener(new MouseAdapter() {
-            public void mouseClicked(MouseEvent me) {
-                System.out.println("CLICKED");
-            }
-        });
-        tableEditLabel.setIcon(tableEditIcon);
-    }
-
     private void initDatabaseTable() {
+        ITableActionEvent event = new ITableActionEvent() {
+            @Override
+            public void onEdit(int row) {
+                System.out.println("Edit row" + row);
+            }
+
+            @Override
+            public void onDelete(int row) {
+                System.out.println("Delete row" + row);
+            }
+        };
         databaseTable = new JTable(databaseTableModel);
+        databaseTable.getColumnModel().getColumn(3).setCellRenderer(new TableActionCellRenderer());
+        databaseTable.getColumnModel().getColumn(3).setCellEditor(new TableActionCellEditor(event));
         databaseTable.getTableHeader().setReorderingAllowed(false);
         databaseTable.setAutoCreateRowSorter(true);
 
