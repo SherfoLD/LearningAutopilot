@@ -45,13 +45,11 @@ public class PanelAction extends JPanel {
 
     public void initTableEditButton() {
         tableEditButton = new ActionButton();
-        tableEditButton.setText("EditButton");
         tableEditButton.setIcon(tableEditIcon);
     }
 
     public void initTableDeleteButton() {
         tableDeleteButton = new ActionButton();
-        tableDeleteButton.setText("DeleteButton");
         tableDeleteButton.setIcon(tableDeleteIcon);
     }
 
