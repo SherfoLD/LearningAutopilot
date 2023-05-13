@@ -20,7 +20,7 @@ public class PanelAction extends JPanel {
         tableDeleteIcon = new ImageIcon(tableDeleteIconURL);
 
         Image tableDeleteImage = tableDeleteIcon.getImage();
-        Image scaledTableDeleteImage = tableDeleteImage.getScaledInstance(15, 15, Image.SCALE_SMOOTH);
+        Image scaledTableDeleteImage = tableDeleteImage.getScaledInstance(25, 25, Image.SCALE_SMOOTH);
         tableDeleteIcon = new ImageIcon(scaledTableDeleteImage);
 
         // Edit Icon initialization
@@ -28,7 +28,7 @@ public class PanelAction extends JPanel {
         tableEditIcon = new ImageIcon(tableEditIconURL);
 
         Image tableEditImage = tableEditIcon.getImage();
-        Image scaledTableEditImage = tableEditImage.getScaledInstance(15, 15, Image.SCALE_SMOOTH);
+        Image scaledTableEditImage = tableEditImage.getScaledInstance(25, 25, Image.SCALE_SMOOTH);
         tableEditIcon = new ImageIcon(scaledTableEditImage);
     }
 
@@ -55,7 +55,7 @@ public class PanelAction extends JPanel {
 
     private void initLayout() {
         this.setLayout(new GridLayoutManager(1, 2, new Insets(0, 0, 0, 0), -1, -1));
-        this.add(tableEditButton, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        this.add(tableEditButton, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         this.add(tableDeleteButton, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
     }
 }
