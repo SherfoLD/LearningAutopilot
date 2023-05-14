@@ -1,6 +1,7 @@
 package com.LearningAutopilot.UI.TableHelper;
 
 import com.LearningAutopilot.DatabaseConnection;
+import com.LearningAutopilot.SQLHelper.ITableSQLHelper;
 
 import javax.swing.table.DefaultTableModel;
 import java.sql.Connection;
@@ -10,14 +11,13 @@ import java.sql.Statement;
 import java.util.ArrayList;
 
 public class DatabaseTableModel extends DefaultTableModel {
-    private final String tableName;
+    private final ITableSQLHelper tableSQLHelper;
     private int initialColumnCount;
-
     Object[][] tableData;
     Object[] columnIdentifiers;
 
-    public DatabaseTableModel(String tableName) {
-        this.tableName = tableName;
+    public DatabaseTableModel(ITableSQLHelper tableSQLHelper) {
+        this.tableSQLHelper = tableSQLHelper;
         try {
             prepareTableData();
         } catch (SQLException e) {
@@ -31,19 +31,27 @@ public class DatabaseTableModel extends DefaultTableModel {
         return column == initialColumnCount; //Last column is PanelAction
     }
 
-    public ResultSet getStarterResultSet() throws SQLException {
+    public void refresh(){
+        try {
+            prepareTableData();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        super.setDataVector(tableData, columnIdentifiers);
+    }
+
+    public ResultSet getResultSet() throws SQLException {
         Connection conn = DatabaseConnection.getInstance().getDbConnection();
         Statement stmt = conn.createStatement(
                 ResultSet.TYPE_SCROLL_INSENSITIVE,
                 ResultSet.CONCUR_READ_ONLY);
 
-        String query = "SELECT * FROM " + "\"" + tableName + "\"";
-
+        String query = tableSQLHelper.getView();
         return stmt.executeQuery(query);
     }
 
     private void prepareTableData() throws SQLException {
-        ResultSet rs = getStarterResultSet();
+        ResultSet rs = getResultSet();
         initialColumnCount = rs.getMetaData().getColumnCount();
 
         //Setup Column Identifiers

@@ -4,13 +4,19 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="8703f918-a2fa-4c3a-922d-0fd6c14d1db5" name="Changes" comment="Rebased database table model initialization from TableInteractionForm to own class (DatabaseTableModel)">
+    <list default="true" id="8703f918-a2fa-4c3a-922d-0fd6c14d1db5" name="Changes" comment="Working build before implementing event handler">
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/SQLHelper/EquipmentCategoriesSQLHelper.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/SQLHelper/ITableSQLHelper.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/UI/Dialogs/RecordDeleteDialog.form" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/UI/Dialogs/RecordDeleteDialog.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/UI/Dialogs/RecordUpdateOrInsertDialog.form" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/UI/Dialogs/RecordUpdateOrInsertDialog.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/DatabaseConnection.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/DatabaseConnection.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/UI/Forms/DatabaseInteractionForm.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/UI/Forms/DatabaseInteractionForm.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/UI/Forms/TableInteractionForm.form" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/UI/Forms/TableInteractionForm.form" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/UI/Forms/TableInteractionForm.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/UI/Forms/TableInteractionForm.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/UI/TableHelper/ActionButton.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/UI/TableHelper/ActionButton.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/UI/TableHelper/PanelAction.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/UI/TableHelper/PanelAction.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/UI/TableHelper/DatabaseTableModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/UI/TableHelper/DatabaseTableModel.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -89,19 +95,6 @@
     </key>
   </component>
   <component name="RunManager" selected="Application.Main">
-    <configuration name="AboutDialog" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="com.LearningAutopilot.UI.Dialogs.AboutDialog" />
-      <module name="Kursovaya" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="com.LearningAutopilot.UI.Dialogs.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
     <configuration name="DatabaseConnectionDialog" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="com.LearningAutopilot.UI.Dialogs.DatabaseConnectionDialog" />
       <module name="Kursovaya" />
@@ -120,7 +113,7 @@
       <module name="Kursovaya" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="com.LearningAutopilot.*" />
+          <option name="PATTERN" value="com.LearningAutopilot.SQLHelper.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -141,12 +134,39 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="RecordDeleteDialog" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.LearningAutopilot.UI.Dialogs.RecordDeleteDialog" />
+      <module name="Kursovaya" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.LearningAutopilot.UI.Dialogs.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="RecordUpdateOrInsertDialog" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.LearningAutopilot.UI.Dialogs.RecordUpdateOrInsertDialog" />
+      <module name="Kursovaya" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.LearningAutopilot.UI.Dialogs.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <recent_temporary>
       <list>
         <item itemvalue="Application.Main" />
+        <item itemvalue="Application.RecordUpdateOrInsertDialog" />
+        <item itemvalue="Application.RecordDeleteDialog" />
         <item itemvalue="Application.PanelAction" />
         <item itemvalue="Application.DatabaseConnectionDialog" />
-        <item itemvalue="Application.AboutDialog" />
       </list>
     </recent_temporary>
   </component>
@@ -162,7 +182,7 @@
       <workItem from="1682270662550" duration="10977000" />
       <workItem from="1682327723230" duration="53545000" />
       <workItem from="1682683169767" duration="52939000" />
-      <workItem from="1683743390497" duration="32626000" />
+      <workItem from="1683743390497" duration="59804000" />
     </task>
     <task id="LOCAL-00001" summary="Empty main Frame with proper width, height and screen position created">
       <created>1682273847054</created>
@@ -213,7 +233,21 @@
       <option name="project" value="LOCAL" />
       <updated>1683845916982</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="Small visual changes to buttons in Table of TableInteractionForm">
+      <created>1683936718578</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1683936718578</updated>
+    </task>
+    <task id="LOCAL-00009" summary="Working build before implementing event handler">
+      <created>1683936851206</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1683936851206</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -244,15 +278,17 @@
     <MESSAGE value="All tables in database now displayed in DatabaseInteractionForm, added simple table interaction in TableInteractionForm" />
     <MESSAGE value="Added base for buttons do Table of TableInteractionForm" />
     <MESSAGE value="Rebased database table model initialization from TableInteractionForm to own class (DatabaseTableModel)" />
-    <option name="LAST_COMMIT_MESSAGE" value="Rebased database table model initialization from TableInteractionForm to own class (DatabaseTableModel)" />
+    <MESSAGE value="Small visual changes to buttons in Table of TableInteractionForm" />
+    <MESSAGE value="Working build before implementing event handler" />
+    <option name="LAST_COMMIT_MESSAGE" value="Working build before implementing event handler" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/LearningAutopilot/UI/TableHelper/ActionButton.java</url>
-          <line>37</line>
-          <option name="timeStamp" value="33" />
+          <url>file://$PROJECT_DIR$/src/main/java/com/LearningAutopilot/UI/Dialogs/RecordUpdateOrInsertDialog.java</url>
+          <line>113</line>
+          <option name="timeStamp" value="37" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

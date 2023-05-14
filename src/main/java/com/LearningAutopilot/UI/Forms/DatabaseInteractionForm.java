@@ -2,6 +2,7 @@ package com.LearningAutopilot.UI.Forms;
 
 import com.LearningAutopilot.DatabaseConnection;
 import com.LearningAutopilot.Main;
+import com.LearningAutopilot.SQLHelper.EquipmentCategoriesSQLHelper;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import lombok.Getter;
@@ -48,11 +49,14 @@ public class DatabaseInteractionForm {
 
     private void goToTableInteractionForm(String tableName) {
         try {
-            TableInteractionForm tableInteractionForm = new TableInteractionForm(tableName);
+            if (tableName.equals("EquipmentCategories")){
+                EquipmentCategoriesSQLHelper tableSQLHelper = new EquipmentCategoriesSQLHelper();
+                TableInteractionForm tableInteractionForm = new TableInteractionForm(tableSQLHelper);
 
-            Main.mainFrame.getContentPane().removeAll();
-            Main.mainFrame.add(tableInteractionForm.getMainPanel());
-            Main.mainFrame.setVisible(true);
+                Main.mainFrame.getContentPane().removeAll();
+                Main.mainFrame.add(tableInteractionForm.getMainPanel());
+                Main.mainFrame.setVisible(true);
+            }
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(Main.mainFrame,
                     "Невозможно создать таблицу",
