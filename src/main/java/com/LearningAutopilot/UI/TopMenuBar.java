@@ -1,8 +1,12 @@
 package com.LearningAutopilot.UI;
 
+import com.LearningAutopilot.DatabaseConnection;
+import com.LearningAutopilot.Main;
 import com.LearningAutopilot.UI.Dialogs.DatabaseConnectionDialog;
+import com.LearningAutopilot.UI.Forms.LoginForm;
 
 import javax.swing.*;
+import java.sql.SQLException;
 
 public class TopMenuBar extends JMenuBar {
 
@@ -28,17 +32,40 @@ public class TopMenuBar extends JMenuBar {
         // Change DB Config
         JMenuItem databaseConnectionConfigItem = new JMenuItem();
         databaseConnectionConfigItem.setText("Изменить подключение");
-        databaseConnectionConfigItem.addActionListener(e -> databaseConnectionConfigActionPerformed());
+        databaseConnectionConfigItem.addActionListener(e -> showDatabaseConnectionDialog());
         appMenu.add(databaseConnectionConfigItem);
+
+        // Log Out from DB
+        JMenuItem databaseLogOutItem = new JMenuItem();
+        databaseLogOutItem.setText("Выйти из учетной записи");
+        databaseLogOutItem.addActionListener(e -> executeLogOut());
+        appMenu.add(databaseLogOutItem);
 
         topMenuBar.add(appMenu);
     }
 
-    private void databaseConnectionConfigActionPerformed() {
+    private void showDatabaseConnectionDialog() {
         DatabaseConnectionDialog dialog = new DatabaseConnectionDialog();
 
         dialog.pack();
         ComponentUtil.locateToCenter(dialog);
         dialog.setVisible(true);
+    }
+
+    private void executeLogOut() {
+        try {
+            DatabaseConnection.getInstance().closeConnection();
+
+            Main.mainFrame.getContentPane().removeAll();
+            LoginForm loginForm = new LoginForm();
+            Main.mainFrame.add(loginForm.getMainPanel());
+            Main.mainFrame.setVisible(true);
+
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(Main.mainFrame,
+                    e.getMessage(),
+                    "Ошибка выхода",
+                    JOptionPane.ERROR_MESSAGE);
+        }
     }
 }
