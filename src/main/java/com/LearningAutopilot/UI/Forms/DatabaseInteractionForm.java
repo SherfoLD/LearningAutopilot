@@ -1,9 +1,7 @@
 package com.LearningAutopilot.UI.Forms;
 
 import com.LearningAutopilot.Main;
-import com.LearningAutopilot.SQLHelper.EquipmentCategoriesSQLHelper;
-import com.LearningAutopilot.SQLHelper.EquipmentSQLHelper;
-import com.LearningAutopilot.SQLHelper.ITableSQLHelper;
+import com.LearningAutopilot.SQLHelper.*;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import lombok.Getter;
@@ -24,7 +22,6 @@ public class DatabaseInteractionForm {
     private JButton maintenanceRecordsTableButton;
     private JButton recordTypesTableButton;
     private JButton staffTableButton;
-    private final int TABLES_COUNT = 6;
 
     public DatabaseInteractionForm() {
         initAvailableTablesPanel();
@@ -67,8 +64,12 @@ public class DatabaseInteractionForm {
     }
 
     private void initButtonsAction() {
+        classroomsTableButton.addActionListener(e -> goToTableInteractionForm(new ClassroomsSQLHelper()));
         equipmentTableButton.addActionListener(e -> goToTableInteractionForm(new EquipmentSQLHelper()));
         equipmentCategoriesTableButton.addActionListener(e -> goToTableInteractionForm(new EquipmentCategoriesSQLHelper()));
+        maintenanceRecordsTableButton.addActionListener(e -> goToTableInteractionForm(new MaintenanceRecordsSQLHelper()));
+        recordTypesTableButton.addActionListener(e -> goToTableInteractionForm(new RecordTypeSQLHelper()));
+        staffTableButton.addActionListener(e -> goToTableInteractionForm(new StaffSQLHelper()));
     }
 
     private void initButtonsPlacement(){
