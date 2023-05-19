@@ -27,6 +27,7 @@ public class TableInteractionForm {
     private JButton goBackButton;
     private JButton insertRecordButton;
     private JTable databaseTable;
+    DatabaseTableModel databaseTableModel;
     private JLabel tableEditLabel;
     private JLabel tableDeleteLabel;
     private final ITableSQLHelper tableSQLHelper;
@@ -48,6 +49,10 @@ public class TableInteractionForm {
         recordUpdateOrInsertDialog.pack();
         ComponentUtil.locateToCenter(recordUpdateOrInsertDialog);
         recordUpdateOrInsertDialog.setVisible(true);
+
+        databaseTableModel.refresh();
+        int panelActionColumn = databaseTableModel.getColumnCount() - 1;
+        initDatabaseTableProperties(panelActionColumn, getPanelActionEvent(panelActionColumn));
     }
 
     private void goToDatabaseInteractionForm() {
@@ -59,10 +64,16 @@ public class TableInteractionForm {
     }
 
     private void initDatabaseTableModel() {
-        DatabaseTableModel databaseTableModel = new DatabaseTableModel(tableSQLHelper);
+        databaseTableModel = new DatabaseTableModel(tableSQLHelper);
         databaseTable = new JTable(databaseTableModel);
         int panelActionColumn = databaseTableModel.getColumnCount() - 1;
-        ITableActionEvent event = new ITableActionEvent() {
+        initDatabaseTableProperties(panelActionColumn, getPanelActionEvent(panelActionColumn));
+
+        databaseTablePanel.add(new JScrollPane(databaseTable), new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+    }
+
+    private ITableActionEvent getPanelActionEvent(int panelActionColumn) {
+        return new ITableActionEvent() {
             @Override
             public void onEdit(int row) {
                 String record_ID = databaseTableModel.getValueAt(row, 0).toString();
@@ -89,10 +100,8 @@ public class TableInteractionForm {
                 initDatabaseTableProperties(panelActionColumn, this);
             }
         };
-        initDatabaseTableProperties(panelActionColumn, event);
-
-        databaseTablePanel.add(new JScrollPane(databaseTable), new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
     }
+
 
     public void initDatabaseTableProperties(int panelActionColumn, ITableActionEvent event) {
         databaseTable.setRowHeight(40);

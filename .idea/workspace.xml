@@ -4,19 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="8703f918-a2fa-4c3a-922d-0fd6c14d1db5" name="Changes" comment="Added missing icons for table">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/SQLHelper/EquipmentSQLHelper.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/UI/Dialogs/ComboBoxRenderer.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/UI/Dialogs/ForeignKeysParser.java" afterDir="false" />
+    <list default="true" id="8703f918-a2fa-4c3a-922d-0fd6c14d1db5" name="Changes" comment="Fixed add new record interaction, fixed cell renderer. Reformat code in TableInteractionForm">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/DatabaseConnection.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/DatabaseConnection.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/SQLHelper/EquipmentCategoriesSQLHelper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/SQLHelper/EquipmentCategoriesSQLHelper.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/SQLHelper/ITableSQLHelper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/SQLHelper/ITableSQLHelper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/UI/Dialogs/ComboBoxRenderer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/UI/Dialogs/ComboBoxRenderer.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/UI/Dialogs/RecordUpdateOrInsertDialog.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/UI/Dialogs/RecordUpdateOrInsertDialog.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/UI/Forms/DatabaseInteractionForm.form" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/UI/Forms/DatabaseInteractionForm.form" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/UI/Forms/DatabaseInteractionForm.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/UI/Forms/DatabaseInteractionForm.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/UI/Forms/TableInteractionForm.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/UI/Forms/TableInteractionForm.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/UI/TableHelper/DatabaseTableModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/UI/TableHelper/DatabaseTableModel.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -182,7 +175,7 @@
       <workItem from="1682270662550" duration="10977000" />
       <workItem from="1682327723230" duration="53545000" />
       <workItem from="1682683169767" duration="52939000" />
-      <workItem from="1683743390497" duration="102811000" />
+      <workItem from="1683743390497" duration="114578000" />
     </task>
     <task id="LOCAL-00001" summary="Empty main Frame with proper width, height and screen position created">
       <created>1682273847054</created>
@@ -261,7 +254,28 @@
       <option name="project" value="LOCAL" />
       <updated>1684084715716</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="Hardcoded buttons in DatabaseInteractionForm to complete transition to ITableSQLHelper model">
+      <created>1684495195487</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1684495195487</updated>
+    </task>
+    <task id="LOCAL-00013" summary="Added support of Foreign Keys fields (implemented with combo boxes). Slightly changed ITableSQLHelper.">
+      <created>1684495315383</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1684495315383</updated>
+    </task>
+    <task id="LOCAL-00014" summary="Added all remaining table helpers">
+      <created>1684513292716</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1684513292716</updated>
+    </task>
+    <option name="localTasksCounter" value="15" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -296,9 +310,22 @@
     <MESSAGE value="Working build before implementing event handler" />
     <MESSAGE value="Added Dialog for Update/Insert. Implemented SQL helper for requests strings storage and query consistency among multiple classes." />
     <MESSAGE value="Added missing icons for table" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added missing icons for table" />
+    <MESSAGE value="Hardcoded buttons in DatabaseInteractionForm to complete transition to ITableSQLHelper model" />
+    <MESSAGE value="Added support of Foreign Keys fields (implemented with combo boxes). Slightly changed ITableSQLHelper." />
+    <MESSAGE value="Added all remaining table helpers" />
+    <MESSAGE value="Fixed add new record interaction, fixed cell renderer. Reformat code in TableInteractionForm" />
+    <option name="LAST_COMMIT_MESSAGE" value="Fixed add new record interaction, fixed cell renderer. Reformat code in TableInteractionForm" />
   </component>
   <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/LearningAutopilot/UI/Dialogs/ForeignKeysParser.java</url>
+          <line>33</line>
+          <option name="timeStamp" value="53" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
     <pin-to-top-manager>
       <pinned-members>
         <PinnedItemInfo parentTag="com.formdev.flatlaf.ui.FlatComboBoxUI$2" memberName="BasicComboBoxUI$ComboBoxLayoutManager.this$0" />

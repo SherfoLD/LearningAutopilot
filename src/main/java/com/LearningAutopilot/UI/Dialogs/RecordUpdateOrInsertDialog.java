@@ -26,7 +26,6 @@ public class RecordUpdateOrInsertDialog extends JDialog {
     private JPanel recordFieldsPanel;
     private final ITableSQLHelper tableSQLHelper;
     private final String record_ID;
-    private HashMap<String, ArrayList<String>> foreignKeyInfo = new HashMap<>();
     private final String ZERO_UUID = "00000000-0000-0000-0000-000000000000";
 
 
@@ -72,13 +71,22 @@ public class RecordUpdateOrInsertDialog extends JDialog {
 
         rs.next();
         for (int i = 2; i < columnCount + 1; i++) { //ID field not parsed
+            //Add Label
             String fieldName = rs.getMetaData().getColumnName(i);
             addRecordLabel(fieldName, i * 2 - 1 - 1);
 
-            String fieldData = rs.getString(i);
+            //Check Insert Or Update
+            String fieldData = "";
+            String[] valuePair = new String[2];
+            if (!record_ID.equals(ZERO_UUID)) {
+                fieldData = rs.getString(i);
+                if (foreignKeys.contains(fieldName))
+                    valuePair = foreignKeysParser.getForeignKeyValuePair(fieldName, fieldData);
+            }
+
+            //Add ComboBox or TextField
             if (foreignKeys.contains(fieldName)) {
                 HashMap<String, String> foreignKeyCorrelation = foreignKeysParser.getForeignKeyCorrelation(fieldName);
-                String[] valuePair = foreignKeysParser.getForeignKeyValuePair(fieldName, fieldData);
                 addRecordComboBox(foreignKeyCorrelation, valuePair, i * 2 - 1);
             } else
                 addRecordField(fieldData, i * 2 - 1);
@@ -96,6 +104,7 @@ public class RecordUpdateOrInsertDialog extends JDialog {
             updatedFieldsData.add(record_ID); //First parameter is ID always
             Component[] components = recordFieldsPanel.getComponents();
 
+            //Parse through components and retrieve data from them
             for (Component component : components) {
                 if (component instanceof JTextField textField) {
                     String updatedFieldData = textField.getText();
@@ -152,8 +161,7 @@ public class RecordUpdateOrInsertDialog extends JDialog {
     private void addRecordField(String fieldData, int gridRow) {
         JTextField recordField = new JTextField();
         recordField.setFont(new Font(null, Font.PLAIN, 16));
-        if (!record_ID.equals(ZERO_UUID))
-            recordField.setText(fieldData);
+        recordField.setText(fieldData);
 
         recordFieldsPanel.add(recordField, getGridConstraints(gridRow));
     }
@@ -169,12 +177,11 @@ public class RecordUpdateOrInsertDialog extends JDialog {
                 selectionIndex = index;
             index++;
         }
+
         JComboBox<String[]> recordComboBox = new JComboBox<>(toArray);
         recordComboBox.setFont(new Font(null, Font.PLAIN, 16));
         recordComboBox.setRenderer(new ComboBoxRenderer());
-
-        if (!record_ID.equals(ZERO_UUID))
-            recordComboBox.setSelectedIndex(selectionIndex);
+        recordComboBox.setSelectedIndex(selectionIndex);
 
         recordFieldsPanel.add(recordComboBox, getGridConstraints(gridRow));
     }
