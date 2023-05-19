@@ -75,6 +75,7 @@ public class TableInteractionForm {
                 databaseTableModel.refresh();
                 initDatabaseTableProperties(panelActionColumn, this);
             }
+
             @Override
             public void onDelete(int row) {
                 String record_ID = databaseTableModel.getValueAt(row, 0).toString();
@@ -93,7 +94,7 @@ public class TableInteractionForm {
         databaseTablePanel.add(new JScrollPane(databaseTable), new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
     }
 
-    public void initDatabaseTableProperties(int panelActionColumn, ITableActionEvent event){
+    public void initDatabaseTableProperties(int panelActionColumn, ITableActionEvent event) {
         databaseTable.setRowHeight(40);
         databaseTable.setAutoCreateRowSorter(true);
         databaseTable.setFont(new Font(null, Font.PLAIN, 14));
@@ -106,6 +107,7 @@ public class TableInteractionForm {
         //Column with ID removed
         databaseTable.removeColumn(databaseTable.getColumnModel().getColumn(0));
     }
+
     private void initLabel() {
         databaseTableLabel.setText("Таблица " + tableSQLHelper.getTableName());
     }
