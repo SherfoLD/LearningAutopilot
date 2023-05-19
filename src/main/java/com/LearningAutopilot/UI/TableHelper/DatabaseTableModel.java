@@ -46,7 +46,7 @@ public class DatabaseTableModel extends DefaultTableModel {
                 ResultSet.TYPE_SCROLL_INSENSITIVE,
                 ResultSet.CONCUR_READ_ONLY);
 
-        String query = tableSQLHelper.getView();
+        String query = tableSQLHelper.getClientView();
         return stmt.executeQuery(query);
     }
 

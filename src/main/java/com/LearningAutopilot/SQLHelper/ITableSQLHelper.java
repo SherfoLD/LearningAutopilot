@@ -1,8 +1,10 @@
 package com.LearningAutopilot.SQLHelper;
 
 public interface ITableSQLHelper {
+    String[][] getPrimaryKeyReplacement();
     String getTableName();
-    String getView();
+    String getClientView();
+    String getRawView();
     String getDeleteProcedure();
     String getUpdateOrInsertProcedure();
     String getByID();
