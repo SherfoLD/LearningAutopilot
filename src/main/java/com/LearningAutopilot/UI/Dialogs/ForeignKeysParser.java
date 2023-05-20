@@ -1,10 +1,8 @@
 package com.LearningAutopilot.UI.Dialogs;
 
 import com.LearningAutopilot.DatabaseConnection;
-import com.LearningAutopilot.Main;
 import com.LearningAutopilot.SQLHelper.ITableSQLHelper;
 
-import javax.swing.*;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -14,16 +12,10 @@ public class ForeignKeysParser {
     private HashMap<String, ArrayList<String>> foreignKeysFullInfo = new HashMap<>();
     private ArrayList<String> foreignKeys = new ArrayList<>();
 
-    public ForeignKeysParser(ITableSQLHelper tableSQLHelper) {
+    public ForeignKeysParser(ITableSQLHelper tableSQLHelper) throws SQLException {
         this.tableSQLHelper = tableSQLHelper;
-        try {
-            initFullForeignKeysInfo();
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(Main.mainFrame,
-                    e.getMessage(),
-                    "Ошибка добавления/изменения записи",
-                    JOptionPane.ERROR_MESSAGE);
-        }
+
+        initFullForeignKeysInfo();
     }
 
     public ArrayList<String> getForeignKeys() {

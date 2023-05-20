@@ -4,16 +4,21 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="8703f918-a2fa-4c3a-922d-0fd6c14d1db5" name="Changes" comment="Added log out feature">
+    <list default="true" id="8703f918-a2fa-4c3a-922d-0fd6c14d1db5" name="Changes" comment="Changed app main icon">
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/Exceptions/SQLExceptionMessageWrapper.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/Exceptions/WrappedSQLException.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/Exceptions/InvalidConfigException.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/Exceptions/InvalidConfigException.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/UI/Dialogs/ForeignKeysParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/UI/Dialogs/ForeignKeysParser.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/UI/Dialogs/RecordDeleteDialog.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/UI/Dialogs/RecordDeleteDialog.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/UI/Dialogs/RecordUpdateOrInsertDialog.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/UI/Dialogs/RecordUpdateOrInsertDialog.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/UI/Forms/DatabaseInteractionForm.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/UI/Forms/DatabaseInteractionForm.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/UI/Forms/LoginForm.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/UI/Forms/LoginForm.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/UI/Forms/TableInteractionForm.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/UI/Forms/TableInteractionForm.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/UI/TableHelper/ActionButton.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/UI/TableHelper/ActionButton.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/UI/TableHelper/DatabaseTableModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/UI/TableHelper/DatabaseTableModel.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/UI/TableHelper/TableActionCellEditor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/UI/TableHelper/TableActionCellEditor.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/UI/TableHelper/TableActionCellRenderer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/UI/TableHelper/TableActionCellRenderer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/UI/TableHelper/ITableActionEvent.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/UI/TableHelper/ITableActionEvent.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/UI/TableHelper/PanelAction.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/UI/TableHelper/PanelAction.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/UI/TopMenuBar.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/UI/TopMenuBar.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -180,7 +185,7 @@
       <workItem from="1682270662550" duration="10977000" />
       <workItem from="1682327723230" duration="53545000" />
       <workItem from="1682683169767" duration="52939000" />
-      <workItem from="1683743390497" duration="133456000" />
+      <workItem from="1683743390497" duration="144145000" />
     </task>
     <task id="LOCAL-00001" summary="Empty main Frame with proper width, height and screen position created">
       <created>1682273847054</created>
@@ -294,7 +299,28 @@
       <option name="project" value="LOCAL" />
       <updated>1684517036406</updated>
     </task>
-    <option name="localTasksCounter" value="17" />
+    <task id="LOCAL-00017" summary="Changed app main color">
+      <created>1684580257266</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1684580257266</updated>
+    </task>
+    <task id="LOCAL-00018" summary="Small code refactoring">
+      <created>1684580288822</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1684580288822</updated>
+    </task>
+    <task id="LOCAL-00019" summary="Changed app main icon">
+      <created>1684623916721</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1684623916721</updated>
+    </task>
+    <option name="localTasksCounter" value="20" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -334,14 +360,17 @@
     <MESSAGE value="Added all remaining table helpers" />
     <MESSAGE value="Fixed add new record interaction, fixed cell renderer. Reformat code in TableInteractionForm" />
     <MESSAGE value="Added log out feature" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added log out feature" />
+    <MESSAGE value="Changed app main color" />
+    <MESSAGE value="Small code refactoring" />
+    <MESSAGE value="Changed app main icon" />
+    <option name="LAST_COMMIT_MESSAGE" value="Changed app main icon" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/com/LearningAutopilot/UI/Dialogs/ForeignKeysParser.java</url>
-          <line>33</line>
+          <line>27</line>
           <option name="timeStamp" value="53" />
         </line-breakpoint>
       </breakpoints>

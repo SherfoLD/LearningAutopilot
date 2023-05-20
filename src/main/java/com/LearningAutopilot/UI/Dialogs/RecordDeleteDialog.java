@@ -1,6 +1,7 @@
 package com.LearningAutopilot.UI.Dialogs;
 
 import com.LearningAutopilot.DatabaseConnection;
+import com.LearningAutopilot.Exceptions.SQLExceptionMessageWrapper;
 import com.LearningAutopilot.Main;
 import com.LearningAutopilot.SQLHelper.ITableSQLHelper;
 
@@ -29,25 +30,28 @@ public class RecordDeleteDialog extends JDialog {
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
         userConfirmationNoButton.addActionListener(e -> dispose());
-        userConfirmationYesButton.addActionListener(e -> executeDelete());
+        userConfirmationYesButton.addActionListener(e -> {
+            try {
+                executeDelete();
+            } catch (SQLException ex) {
+                JOptionPane.showMessageDialog(Main.mainFrame,
+                        SQLExceptionMessageWrapper.getWrappedSQLStateMessage(ex.getSQLState(), ex.getMessage()),
+                        "Ошибка удаления записи",
+                        JOptionPane.ERROR_MESSAGE);
+            }
+        });
     }
 
-    private void executeDelete() {
-        try {
-            Connection conn = DatabaseConnection.getInstance().getDbConnection();
-            Statement stmt = conn.createStatement(
-                    ResultSet.TYPE_SCROLL_INSENSITIVE,
-                    ResultSet.CONCUR_READ_ONLY);
+    private void executeDelete() throws SQLException {
+        Connection conn = DatabaseConnection.getInstance().getDbConnection();
+        Statement stmt = conn.createStatement(
+                ResultSet.TYPE_SCROLL_INSENSITIVE,
+                ResultSet.CONCUR_READ_ONLY);
 
-            String deleteProcedure = tableSQLHelper.getDeleteProcedure() + "('" + record_ID + "')";
-            stmt.executeUpdate(deleteProcedure);
+        String deleteProcedure = tableSQLHelper.getDeleteProcedure() + "('" + record_ID + "')";
+        stmt.executeUpdate(deleteProcedure);
 
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(Main.mainFrame,
-                    e.getMessage(),
-                    "Ошибка удаления записи",
-                    JOptionPane.ERROR_MESSAGE);
-        }
+
         dispose();
     }
 

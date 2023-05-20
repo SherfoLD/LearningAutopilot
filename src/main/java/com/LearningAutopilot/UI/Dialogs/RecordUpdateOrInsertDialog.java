@@ -1,6 +1,7 @@
 package com.LearningAutopilot.UI.Dialogs;
 
 import com.LearningAutopilot.DatabaseConnection;
+import com.LearningAutopilot.Exceptions.SQLExceptionMessageWrapper;
 import com.LearningAutopilot.Main;
 import com.LearningAutopilot.SQLHelper.ITableSQLHelper;
 import com.intellij.uiDesigner.core.GridConstraints;
@@ -29,18 +30,25 @@ public class RecordUpdateOrInsertDialog extends JDialog {
     private final String ZERO_UUID = "00000000-0000-0000-0000-000000000000";
 
 
-    public RecordUpdateOrInsertDialog(ITableSQLHelper tableSQLHelper, String record_ID) {
+    public RecordUpdateOrInsertDialog(ITableSQLHelper tableSQLHelper, String record_ID) throws SQLException {
         super(Main.mainFrame, "Добавление/Изменение записи");
         this.tableSQLHelper = tableSQLHelper;
         this.record_ID = record_ID;
 
-        try {
-            init();
-        } catch (SQLException e) {
-            showErrorMessage(e);
-        }
+        init();
+
         recordCancelButton.addActionListener(e -> dispose());
-        recordSaveButton.addActionListener(e -> updateRecord());
+        recordSaveButton.addActionListener(e -> {
+            try {
+                updateRecord();
+                throw new SQLException();
+            } catch (SQLException ex) {
+                JOptionPane.showMessageDialog(Main.mainFrame,
+                        SQLExceptionMessageWrapper.getWrappedSQLStateMessage(ex.getSQLState(), ex.getMessage()),
+                        "Ошибка добавления/изменения записи",
+                        JOptionPane.ERROR_MESSAGE);
+            }
+        });
 
         setContentPane(contentPane);
         setModal(true);
@@ -79,37 +87,32 @@ public class RecordUpdateOrInsertDialog extends JDialog {
         }
     }
 
-    private void updateRecord() {
-        try {
-            Connection conn = DatabaseConnection.getInstance().getDbConnection();
-            Statement stmt = conn.createStatement(
-                    ResultSet.TYPE_SCROLL_INSENSITIVE,
-                    ResultSet.CONCUR_READ_ONLY);
+    private void updateRecord() throws SQLException {
+        Connection conn = DatabaseConnection.getInstance().getDbConnection();
+        Statement stmt = conn.createStatement(
+                ResultSet.TYPE_SCROLL_INSENSITIVE,
+                ResultSet.CONCUR_READ_ONLY);
 
-            ArrayList<String> updatedFieldsData = new ArrayList<>();
-            updatedFieldsData.add(record_ID); //First parameter is ID always
-            Component[] components = recordFieldsPanel.getComponents();
+        ArrayList<String> updatedFieldsData = new ArrayList<>();
+        updatedFieldsData.add(record_ID); //First parameter is ID always
+        Component[] components = recordFieldsPanel.getComponents();
 
-            //Parse through components and retrieve data from them
-            for (Component component : components) {
-                if (component instanceof JTextField textField) {
-                    String updatedFieldData = textField.getText();
-                    updatedFieldsData.add(updatedFieldData);
+        //Parse through components and retrieve data from them
+        for (Component component : components) {
+            if (component instanceof JTextField textField) {
+                String updatedFieldData = textField.getText();
+                updatedFieldsData.add(updatedFieldData);
 
-                } else if (component instanceof JComboBox comboBox) {
-                    String[] FKCorrelation = (String[]) comboBox.getSelectedItem();
-                    String UUID = FKCorrelation[0];
-                    updatedFieldsData.add(UUID);
-                }
+            } else if (component instanceof JComboBox comboBox) {
+                String[] FKCorrelation = (String[]) comboBox.getSelectedItem();
+                String UUID = FKCorrelation[0];
+                updatedFieldsData.add(UUID);
             }
-            String finalProcedureQuery = getFinalProcedure(updatedFieldsData);
-            stmt.executeUpdate(finalProcedureQuery);
-
-            dispose();
-        } catch (
-                SQLException e) {
-            showErrorMessage(e);
         }
+        String finalProcedureQuery = getFinalProcedure(updatedFieldsData);
+        stmt.executeUpdate(finalProcedureQuery);
+
+        dispose();
     }
 
     public ResultSet getStarterResultSet() throws SQLException {
@@ -140,13 +143,6 @@ public class RecordUpdateOrInsertDialog extends JDialog {
         matcher.appendTail(finalProcedureQuery);
 
         return finalProcedureQuery.toString();
-    }
-
-    private void showErrorMessage(SQLException e) {
-        JOptionPane.showMessageDialog(Main.mainFrame,
-                e.getMessage(),
-                "Ошибка добавления/изменения записи",
-                JOptionPane.ERROR_MESSAGE);
     }
 
     private void addRecordLabel(String fieldName, int gridRow) {

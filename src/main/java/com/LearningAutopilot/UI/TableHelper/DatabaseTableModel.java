@@ -1,8 +1,11 @@
 package com.LearningAutopilot.UI.TableHelper;
 
 import com.LearningAutopilot.DatabaseConnection;
+import com.LearningAutopilot.Exceptions.SQLExceptionMessageWrapper;
+import com.LearningAutopilot.Main;
 import com.LearningAutopilot.SQLHelper.ITableSQLHelper;
 
+import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -31,8 +34,11 @@ public class DatabaseTableModel extends DefaultTableModel {
     public void refresh(){
         try {
             prepareTableData();
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(Main.mainFrame,
+                    SQLExceptionMessageWrapper.getWrappedSQLStateMessage(ex.getSQLState(), ex.getMessage()),
+                    "Ошибка обновления таблицы",
+                    JOptionPane.ERROR_MESSAGE);
         }
         super.setDataVector(tableData, columnIdentifiers);
     }

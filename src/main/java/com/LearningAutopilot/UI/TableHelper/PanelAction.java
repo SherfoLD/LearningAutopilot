@@ -1,5 +1,7 @@
 package com.LearningAutopilot.UI.TableHelper;
 
+import com.LearningAutopilot.Exceptions.SQLExceptionMessageWrapper;
+import com.LearningAutopilot.Main;
 import com.LearningAutopilot.UI.Forms.TableInteractionForm;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
@@ -7,6 +9,7 @@ import com.intellij.uiDesigner.core.GridLayoutManager;
 import javax.swing.*;
 import java.awt.*;
 import java.net.URL;
+import java.sql.SQLException;
 
 public class PanelAction extends JPanel {
     private ActionButton tableEditButton;
@@ -39,7 +42,16 @@ public class PanelAction extends JPanel {
     }
 
     public void initEvent(ITableActionEvent event, int row){
-        tableEditButton.addActionListener(e -> event.onEdit(row));
+        tableEditButton.addActionListener(e -> {
+            try {
+                event.onEdit(row);
+            } catch (SQLException ex) {
+                JOptionPane.showMessageDialog(Main.mainFrame,
+                        SQLExceptionMessageWrapper.getWrappedSQLStateMessage(ex.getSQLState(), ex.getMessage()),
+                        "Ошибка добавления/изменения записи",
+                        JOptionPane.ERROR_MESSAGE);
+            }
+        });
         tableDeleteButton.addActionListener(e -> event.onDelete(row));
     }
 

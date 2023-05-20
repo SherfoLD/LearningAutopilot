@@ -6,7 +6,7 @@ public class InvalidConfigException extends Exception {
         super(s);
     }
 
-    public InvalidConfigException(String s, Exception e) {
-        super(s, e);
+    public InvalidConfigException(String s, Exception ex) {
+        super(s, ex);
     }
 }

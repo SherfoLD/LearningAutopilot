@@ -1,5 +1,6 @@
 package com.LearningAutopilot.UI.Forms;
 
+import com.LearningAutopilot.Exceptions.SQLExceptionMessageWrapper;
 import com.LearningAutopilot.Main;
 import com.LearningAutopilot.SQLHelper.*;
 import com.intellij.uiDesigner.core.GridConstraints;
@@ -35,7 +36,7 @@ public class DatabaseInteractionForm {
         maintenanceRecordsTableButton = new JButton();
         recordTypesTableButton = new JButton();
         staffTableButton = new JButton();
-        
+
         initButtonsFont();
         initButtonsText();
         initButtonsAction();
@@ -54,7 +55,7 @@ public class DatabaseInteractionForm {
         staffTableButton.setFont(buttonFont);
     }
 
-    private void initButtonsText(){
+    private void initButtonsText() {
         classroomsTableButton.setText("Classrooms (Кабинеты)");
         equipmentTableButton.setText("Equipment (Оборудование)");
         equipmentCategoriesTableButton.setText("Equipment Categories (Категории Оборудования)");
@@ -72,7 +73,7 @@ public class DatabaseInteractionForm {
         staffTableButton.addActionListener(e -> goToTableInteractionForm(new StaffSQLHelper()));
     }
 
-    private void initButtonsPlacement(){
+    private void initButtonsPlacement() {
         availableTablesPanel.add(classroomsTableButton, getGridConstraints(0));
         availableTablesPanel.add(equipmentTableButton, getGridConstraints(1));
         availableTablesPanel.add(equipmentCategoriesTableButton, getGridConstraints(2));
@@ -82,7 +83,7 @@ public class DatabaseInteractionForm {
     }
 
     private void initAvailableTablesPanel() {
-        availableTablesPanel.setLayout(new GridLayoutManager(6, 1, new Insets(0, 10, 0, 10), -1, -1));
+        availableTablesPanel.setLayout(new GridLayoutManager(6, 1, new Insets(0, 75, 35, 75), -1, -1));
         componentsPanel.add(availableTablesPanel, getGridConstraints(1));
     }
 
@@ -98,9 +99,9 @@ public class DatabaseInteractionForm {
             Main.mainFrame.getContentPane().removeAll();
             Main.mainFrame.add(tableInteractionForm.getMainPanel());
             Main.mainFrame.setVisible(true);
-        } catch (SQLException e) {
+        } catch (SQLException ex) {
             JOptionPane.showMessageDialog(Main.mainFrame,
-                    "Невозможно создать таблицу. Возможно у вас нет прав для её просмотра.",
+                    SQLExceptionMessageWrapper.getWrappedSQLStateMessage(ex.getSQLState(), ex.getMessage()),
                     "Ошибка обращения к таблице",
                     JOptionPane.ERROR_MESSAGE);
         }

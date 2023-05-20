@@ -1,6 +1,7 @@
 package com.LearningAutopilot.UI.Forms;
 
 import com.LearningAutopilot.DatabaseConnection;
+import com.LearningAutopilot.Exceptions.SQLExceptionMessageWrapper;
 import com.LearningAutopilot.Main;
 import lombok.Getter;
 
@@ -22,23 +23,22 @@ public class LoginForm {
 
     public LoginForm() {
         initIcon();
-
-        userConfirmButton.addActionListener(e -> setupConnection());
+        userConfirmButton.addActionListener(e -> {
+            try {
+                setupConnection();
+            } catch (SQLException ex) {
+                JOptionPane.showMessageDialog(Main.mainFrame,
+                        SQLExceptionMessageWrapper.getWrappedSQLStateMessage(ex.getSQLState(), ex.getMessage()),
+                        "Ошибка подключения к системе",
+                        JOptionPane.ERROR_MESSAGE);
+            }
+        });
     }
 
-    private void setupConnection() {
+    private void setupConnection() throws SQLException {
         String userLogin = userLoginField.getText();
         String userPassword = new String(userPasswordField.getPassword());
-
-        try {
-            DatabaseConnection.getInstance().initializeConnection(userLogin, userPassword);
-        } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(Main.mainFrame,
-                    ex.getMessage(),
-                    "Сбой подключения",
-                    JOptionPane.ERROR_MESSAGE);
-            return;
-        }
+        DatabaseConnection.getInstance().initializeConnection(userLogin, userPassword);
 
         goToDatabaseInteractionForm();
     }

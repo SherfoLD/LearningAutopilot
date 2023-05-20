@@ -1,5 +1,6 @@
 package com.LearningAutopilot.UI.Forms;
 
+import com.LearningAutopilot.Exceptions.SQLExceptionMessageWrapper;
 import com.LearningAutopilot.Main;
 import com.LearningAutopilot.SQLHelper.ITableSQLHelper;
 import com.LearningAutopilot.UI.ComponentUtil;
@@ -40,10 +41,19 @@ public class TableInteractionForm {
         initDatabaseTableModel();
 
         goBackButton.addActionListener(e -> goToDatabaseInteractionForm());
-        insertRecordButton.addActionListener(e -> insertRecord());
+        insertRecordButton.addActionListener(e -> {
+            try {
+                insertRecord();
+            } catch (SQLException ex) {
+                JOptionPane.showMessageDialog(Main.mainFrame,
+                        SQLExceptionMessageWrapper.getWrappedSQLStateMessage(ex.getSQLState(), ex.getMessage()),
+                        "Ошибка добавления/изменения записи",
+                        JOptionPane.ERROR_MESSAGE);
+            }
+        });
     }
 
-    private void insertRecord() {
+    private void insertRecord() throws SQLException {
         String ZERO_UUID = "00000000-0000-0000-0000-000000000000";
         RecordUpdateOrInsertDialog recordUpdateOrInsertDialog = new RecordUpdateOrInsertDialog(tableSQLHelper, ZERO_UUID);
         recordUpdateOrInsertDialog.pack();
@@ -66,10 +76,10 @@ public class TableInteractionForm {
     private ITableActionEvent getPanelActionEvent(int panelActionColumn) {
         return new ITableActionEvent() {
             @Override
-            public void onEdit(int row) {
+            public void onEdit(int row) throws SQLException {
                 String record_ID = databaseTableModel.getValueAt(row, 0).toString();
-
                 RecordUpdateOrInsertDialog recordUpdateOrInsertDialog = new RecordUpdateOrInsertDialog(tableSQLHelper, record_ID);
+
                 recordUpdateOrInsertDialog.pack();
                 ComponentUtil.locateToCenter(recordUpdateOrInsertDialog);
                 recordUpdateOrInsertDialog.setVisible(true);
@@ -93,7 +103,7 @@ public class TableInteractionForm {
         };
     }
 
-    private void initDatabaseTableModel() throws SQLException{
+    private void initDatabaseTableModel() throws SQLException {
         databaseTableModel = new DatabaseTableModel(tableSQLHelper);
         databaseTable = new JTable(databaseTableModel);
         int panelActionColumn = databaseTableModel.getColumnCount() - 1;

@@ -1,6 +1,7 @@
 package com.LearningAutopilot.UI;
 
 import com.LearningAutopilot.DatabaseConnection;
+import com.LearningAutopilot.Exceptions.SQLExceptionMessageWrapper;
 import com.LearningAutopilot.Main;
 import com.LearningAutopilot.UI.Dialogs.DatabaseConnectionDialog;
 import com.LearningAutopilot.UI.Forms.LoginForm;
@@ -38,7 +39,16 @@ public class TopMenuBar extends JMenuBar {
         // Log Out from DB
         JMenuItem databaseLogOutItem = new JMenuItem();
         databaseLogOutItem.setText("Выйти из учетной записи");
-        databaseLogOutItem.addActionListener(e -> executeLogOut());
+        databaseLogOutItem.addActionListener(e -> {
+            try {
+                executeLogOut();
+            } catch (SQLException ex) {
+                JOptionPane.showMessageDialog(Main.mainFrame,
+                        SQLExceptionMessageWrapper.getWrappedSQLStateMessage(ex.getSQLState(), ex.getMessage()),
+                        "Ошибка закрытия соединения",
+                        JOptionPane.ERROR_MESSAGE);
+            }
+        });
         appMenu.add(databaseLogOutItem);
 
         topMenuBar.add(appMenu);
@@ -52,20 +62,12 @@ public class TopMenuBar extends JMenuBar {
         dialog.setVisible(true);
     }
 
-    private void executeLogOut() {
-        try {
-            DatabaseConnection.getInstance().closeConnection();
+    private void executeLogOut() throws SQLException {
+        DatabaseConnection.getInstance().closeConnection();
 
-            Main.mainFrame.getContentPane().removeAll();
-            LoginForm loginForm = new LoginForm();
-            Main.mainFrame.add(loginForm.getMainPanel());
-            Main.mainFrame.setVisible(true);
-
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(Main.mainFrame,
-                    e.getMessage(),
-                    "Ошибка выхода",
-                    JOptionPane.ERROR_MESSAGE);
-        }
+        Main.mainFrame.getContentPane().removeAll();
+        LoginForm loginForm = new LoginForm();
+        Main.mainFrame.add(loginForm.getMainPanel());
+        Main.mainFrame.setVisible(true);
     }
 }
