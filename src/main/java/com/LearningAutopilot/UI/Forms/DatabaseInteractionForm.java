@@ -100,7 +100,7 @@ public class DatabaseInteractionForm {
             Main.mainFrame.setVisible(true);
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(Main.mainFrame,
-                    "Невозможно создать таблицу",
+                    "Невозможно создать таблицу. Возможно у вас нет прав для её просмотра.",
                     "Ошибка обращения к таблице",
                     JOptionPane.ERROR_MESSAGE);
         }

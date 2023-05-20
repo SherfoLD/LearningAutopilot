@@ -47,20 +47,6 @@ public class RecordUpdateOrInsertDialog extends JDialog {
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
     }
 
-    public ResultSet getStarterResultSet() throws SQLException {
-        Connection conn = DatabaseConnection.getInstance().getDbConnection();
-        Statement stmt = conn.createStatement(
-                ResultSet.TYPE_SCROLL_INSENSITIVE,
-                ResultSet.CONCUR_READ_ONLY);
-
-        String query = tableSQLHelper.getByID() + "'" + record_ID + "'";
-        if (record_ID.equals(ZERO_UUID)) // For INSERT
-            query = tableSQLHelper.getRawView();
-
-        return stmt.executeQuery(query);
-    }
-
-
     private void init() throws SQLException {
         ResultSet rs = getStarterResultSet();
         int columnCount = rs.getMetaData().getColumnCount();
@@ -124,7 +110,19 @@ public class RecordUpdateOrInsertDialog extends JDialog {
                 SQLException e) {
             showErrorMessage(e);
         }
+    }
 
+    public ResultSet getStarterResultSet() throws SQLException {
+        Connection conn = DatabaseConnection.getInstance().getDbConnection();
+        Statement stmt = conn.createStatement(
+                ResultSet.TYPE_SCROLL_INSENSITIVE,
+                ResultSet.CONCUR_READ_ONLY);
+
+        String query = tableSQLHelper.getByID() + "'" + record_ID + "'";
+        if (record_ID.equals(ZERO_UUID)) // For INSERT
+            query = tableSQLHelper.getRawView();
+
+        return stmt.executeQuery(query);
     }
 
     private String getFinalProcedure(ArrayList<String> updatedFieldsData) {

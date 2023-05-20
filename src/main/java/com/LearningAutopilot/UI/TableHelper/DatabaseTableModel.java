@@ -16,13 +16,10 @@ public class DatabaseTableModel extends DefaultTableModel {
     Object[][] tableData;
     Object[] columnIdentifiers;
 
-    public DatabaseTableModel(ITableSQLHelper tableSQLHelper) {
+    public DatabaseTableModel(ITableSQLHelper tableSQLHelper) throws SQLException {
         this.tableSQLHelper = tableSQLHelper;
-        try {
-            prepareTableData();
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
-        }
+        prepareTableData();
+
         super.setDataVector(tableData, columnIdentifiers);
     }
 

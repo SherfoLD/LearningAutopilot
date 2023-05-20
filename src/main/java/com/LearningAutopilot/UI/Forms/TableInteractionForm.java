@@ -63,15 +63,6 @@ public class TableInteractionForm {
         Main.mainFrame.setVisible(true);
     }
 
-    private void initDatabaseTableModel() {
-        databaseTableModel = new DatabaseTableModel(tableSQLHelper);
-        databaseTable = new JTable(databaseTableModel);
-        int panelActionColumn = databaseTableModel.getColumnCount() - 1;
-        initDatabaseTableProperties(panelActionColumn, getPanelActionEvent(panelActionColumn));
-
-        databaseTablePanel.add(new JScrollPane(databaseTable), new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
-    }
-
     private ITableActionEvent getPanelActionEvent(int panelActionColumn) {
         return new ITableActionEvent() {
             @Override
@@ -100,6 +91,15 @@ public class TableInteractionForm {
                 initDatabaseTableProperties(panelActionColumn, this);
             }
         };
+    }
+
+    private void initDatabaseTableModel() throws SQLException{
+        databaseTableModel = new DatabaseTableModel(tableSQLHelper);
+        databaseTable = new JTable(databaseTableModel);
+        int panelActionColumn = databaseTableModel.getColumnCount() - 1;
+        initDatabaseTableProperties(panelActionColumn, getPanelActionEvent(panelActionColumn));
+
+        databaseTablePanel.add(new JScrollPane(databaseTable), new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
     }
 
 
