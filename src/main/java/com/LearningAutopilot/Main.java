@@ -8,10 +8,11 @@ import com.LearningAutopilot.UI.Forms.LoginForm;
 import com.LearningAutopilot.UI.MainFrame;
 import com.LearningAutopilot.UI.UiConsts;
 import com.formdev.flatlaf.extras.FlatDesktop;
-import com.formdev.flatlaf.intellijthemes.FlatGruvboxDarkSoftIJTheme;
+import com.formdev.flatlaf.intellijthemes.FlatXcodeDarkIJTheme;
 import com.formdev.flatlaf.util.SystemInfo;
 
 import javax.swing.*;
+import java.awt.*;
 
 public class Main {
     public static MainFrame mainFrame;
@@ -20,7 +21,9 @@ public class Main {
         if (SystemInfo.isMacOS) {
             prepareForMacOS();
         }
-        FlatGruvboxDarkSoftIJTheme.setup();
+
+        FlatXcodeDarkIJTheme.setup();
+        setupUIColors();
 
         mainFrame = new MainFrame();
         mainFrame.init();
@@ -31,6 +34,22 @@ public class Main {
         mainFrame.setVisible(true);
 
         restoreDatabaseConfig();
+    }
+
+    private static void setupUIColors() {
+        Color fancyGreyTableSelection = new Color(75, 77, 77);
+        UIManager.put("Table.selectionBackground", fancyGreyTableSelection);
+        UIManager.put("Table.cellFocusColor", fancyGreyTableSelection);
+        UIManager.put("Table.showHorizontalLines", true);
+
+        UIManager.put("Component.focusWidth", 0);
+        //UIManager.put("Component.innerFocusWidth", 4);
+        UIManager.put("Component.borderWidth", 2);
+
+        //UIManager.put("Component.focusColor", Color.red);
+        Color fancyWhiteBorder = new Color(243, 242, 237);
+        UIManager.put("Component.focusedBorderColor", fancyWhiteBorder);
+        UIManager.put("Button.hoverBorderColor", fancyWhiteBorder);
     }
 
     private static void restoreDatabaseConfig() {
@@ -49,6 +68,7 @@ public class Main {
         System.setProperty("apple.laf.useScreenMenuBar", "true");
         System.setProperty("apple.awt.application.name", UiConsts.APP_NAME);
         System.setProperty("com.apple.mrj.application.apple.menu.about.name", UiConsts.APP_NAME);
+        System.setProperty("apple.awt.application.appearance", "system");
 
         FlatDesktop.setAboutHandler(() -> {
             AboutDialog dialog = new AboutDialog();
