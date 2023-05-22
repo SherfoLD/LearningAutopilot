@@ -41,7 +41,6 @@ public class RecordUpdateOrInsertDialog extends JDialog {
         recordSaveButton.addActionListener(e -> {
             try {
                 updateRecord();
-                throw new SQLException();
             } catch (SQLException ex) {
                 JOptionPane.showMessageDialog(Main.mainFrame,
                         SQLExceptionMessageWrapper.getWrappedSQLStateMessage(ex.getSQLState(), ex.getMessage()),
