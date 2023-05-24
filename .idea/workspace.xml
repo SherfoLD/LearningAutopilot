@@ -4,8 +4,18 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="8703f918-a2fa-4c3a-922d-0fd6c14d1db5" name="Changes" comment="Changed Exceptions structure. Added wrapper for more friendly sql errors">
+    <list default="true" id="8703f918-a2fa-4c3a-922d-0fd6c14d1db5" name="Changes" comment="...">
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/Exceptions/InvalidFieldDataException.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/Exceptions/SQLExceptionMessageWrapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/Exceptions/SQLExceptionMessageWrapper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/SQLHelper/ClassroomsSQLHelper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/SQLHelper/ClassroomsSQLHelper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/SQLHelper/EquipmentSQLHelper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/SQLHelper/EquipmentSQLHelper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/SQLHelper/StaffSQLHelper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/SQLHelper/StaffSQLHelper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/UI/Dialogs/RecordDeleteDialog.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/UI/Dialogs/RecordDeleteDialog.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/UI/Dialogs/RecordUpdateOrInsertDialog.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/UI/Dialogs/RecordUpdateOrInsertDialog.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/UI/Forms/LoginForm.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/UI/Forms/LoginForm.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/UI/TableHelper/PanelAction.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/UI/TableHelper/PanelAction.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -172,7 +182,7 @@
       <workItem from="1682270662550" duration="10977000" />
       <workItem from="1682327723230" duration="53545000" />
       <workItem from="1682683169767" duration="52939000" />
-      <workItem from="1683743390497" duration="150253000" />
+      <workItem from="1683743390497" duration="166679000" />
     </task>
     <task id="LOCAL-00001" summary="Empty main Frame with proper width, height and screen position created">
       <created>1682273847054</created>
@@ -321,7 +331,14 @@
       <option name="project" value="LOCAL" />
       <updated>1684624686592</updated>
     </task>
-    <option name="localTasksCounter" value="22" />
+    <task id="LOCAL-00022" summary="...">
+      <created>1684786432871</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1684786432871</updated>
+    </task>
+    <option name="localTasksCounter" value="23" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -365,7 +382,8 @@
     <MESSAGE value="Small code refactoring" />
     <MESSAGE value="Changed app main icon" />
     <MESSAGE value="Changed Exceptions structure. Added wrapper for more friendly sql errors" />
-    <option name="LAST_COMMIT_MESSAGE" value="Changed Exceptions structure. Added wrapper for more friendly sql errors" />
+    <MESSAGE value="..." />
+    <option name="LAST_COMMIT_MESSAGE" value="..." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

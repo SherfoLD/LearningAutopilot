@@ -1,6 +1,7 @@
 package com.LearningAutopilot.UI.Dialogs;
 
 import com.LearningAutopilot.DatabaseConnection;
+import com.LearningAutopilot.Exceptions.InvalidFieldDataException;
 import com.LearningAutopilot.Exceptions.SQLExceptionMessageWrapper;
 import com.LearningAutopilot.Main;
 import com.LearningAutopilot.SQLHelper.ITableSQLHelper;
@@ -46,6 +47,12 @@ public class RecordUpdateOrInsertDialog extends JDialog {
                         SQLExceptionMessageWrapper.getWrappedSQLStateMessage(ex.getSQLState(), ex.getMessage()),
                         "Ошибка добавления/изменения записи",
                         JOptionPane.ERROR_MESSAGE);
+            } catch (InvalidFieldDataException ex) {
+                JOptionPane.showMessageDialog(Main.mainFrame,
+                        "Поля должны содержать только буквы, цифры и тире" +
+                                "\n Вы ввели: " + ex.getMessage(),
+                        "Ошибка добавления/изменения записи",
+                        JOptionPane.ERROR_MESSAGE);
             }
         });
 
@@ -86,7 +93,7 @@ public class RecordUpdateOrInsertDialog extends JDialog {
         }
     }
 
-    private void updateRecord() throws SQLException {
+    private void updateRecord() throws SQLException, InvalidFieldDataException {
         Connection conn = DatabaseConnection.getInstance().getDbConnection();
         Statement stmt = conn.createStatement(
                 ResultSet.TYPE_SCROLL_INSENSITIVE,
@@ -100,11 +107,18 @@ public class RecordUpdateOrInsertDialog extends JDialog {
         for (Component component : components) {
             if (component instanceof JTextField textField) {
                 String updatedFieldData = textField.getText();
+
+                if (isContainsStrangeSymbols(updatedFieldData))
+                    throw new InvalidFieldDataException(updatedFieldData);
+                if (updatedFieldData.equals(""))
+                    updatedFieldData = "null";
+
                 updatedFieldsData.add(updatedFieldData);
 
             } else if (component instanceof JComboBox comboBox) {
                 String[] FKCorrelation = (String[]) comboBox.getSelectedItem();
                 String UUID = FKCorrelation[0];
+
                 updatedFieldsData.add(UUID);
             }
         }
@@ -114,7 +128,13 @@ public class RecordUpdateOrInsertDialog extends JDialog {
         dispose();
     }
 
-    public ResultSet getStarterResultSet() throws SQLException {
+    private boolean isContainsStrangeSymbols(String fieldData) {
+        String pattern = "[a-zA-Zа-яА-Я0-9\\s-]*";
+
+        return !Pattern.matches(pattern, fieldData);
+    }
+
+    private ResultSet getStarterResultSet() throws SQLException {
         Connection conn = DatabaseConnection.getInstance().getDbConnection();
         Statement stmt = conn.createStatement(
                 ResultSet.TYPE_SCROLL_INSENSITIVE,
@@ -130,18 +150,30 @@ public class RecordUpdateOrInsertDialog extends JDialog {
     private String getFinalProcedure(ArrayList<String> updatedFieldsData) {
         String originProcedureQuery = tableSQLHelper.getUpdateOrInsertProcedure();
 
-        Pattern pattern = Pattern.compile("'(.*?)'");
-        Matcher matcher = pattern.matcher(originProcedureQuery);
+        Pattern fieldsPattern = Pattern.compile("\\(.*"); //('field','field', field)
+        Matcher fieldsMatcher = fieldsPattern.matcher(originProcedureQuery);
+        fieldsMatcher.find();
+        String nonFieldsQuery = originProcedureQuery.replace(fieldsMatcher.group(0), "");
+
+        String foundFields = fieldsMatcher.group(0);
+        Pattern fieldPattern = Pattern.compile("\\w+"); //field field field
+        Matcher fieldMatcher = fieldPattern.matcher(foundFields);
+
         StringBuilder finalProcedureQuery = new StringBuilder();
-
-        int i = 0;
-        while (matcher.find()) {
-            String updatedFieldData = updatedFieldsData.get(i++);
-            matcher.appendReplacement(finalProcedureQuery, "'" + updatedFieldData + "'");
+        for (int i = 0; fieldMatcher.find(); i++) {
+            String updatedFieldData = updatedFieldsData.get(i);
+            fieldMatcher.appendReplacement(finalProcedureQuery, updatedFieldData); //Replacing field with parsed data
         }
-        matcher.appendTail(finalProcedureQuery);
+        fieldMatcher.appendTail(finalProcedureQuery);
+        finalProcedureQuery.insert(0, nonFieldsQuery);
+        String finalProcedureQueryString = unquoteNullValues(finalProcedureQuery);
 
-        return finalProcedureQuery.toString();
+        return finalProcedureQueryString;
+    }
+
+    private static String unquoteNullValues(StringBuilder queryBuilder) {
+        String query = queryBuilder.toString();
+        return query.replace("'null'", "null");
     }
 
     private void addRecordLabel(String fieldName, int gridRow) {
