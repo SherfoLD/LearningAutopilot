@@ -46,6 +46,7 @@ public class PanelAction extends JPanel {
             try {
                 event.onEdit(row);
             } catch (SQLException ex) {
+                System.out.println(ex.getMessage());
                 JOptionPane.showMessageDialog(Main.mainFrame,
                         SQLExceptionMessageWrapper.getWrappedSQLStateMessage(ex.getSQLState(), ex.getMessage()),
                         "Ошибка добавления/изменения записи",

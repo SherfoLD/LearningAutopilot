@@ -23,7 +23,7 @@ public class Main {
         }
 
         FlatXcodeDarkIJTheme.setup();
-        setupUIColors();
+        setupUI();
 
         mainFrame = new MainFrame();
         mainFrame.init();
@@ -36,7 +36,7 @@ public class Main {
         restoreDatabaseConfig();
     }
 
-    private static void setupUIColors() {
+    private static void setupUI() {
         Color fancyGreyTableSelection = new Color(75, 77, 77);
         UIManager.put("Table.selectionBackground", fancyGreyTableSelection);
         UIManager.put("Table.cellFocusColor", fancyGreyTableSelection);
@@ -50,6 +50,8 @@ public class Main {
         Color fancyWhiteBorder = new Color(243, 242, 237);
         UIManager.put("Component.focusedBorderColor", fancyWhiteBorder);
         UIManager.put("Button.hoverBorderColor", fancyWhiteBorder);
+
+        UIManager.put("OptionPane.messageFont", new Font(null, Font.PLAIN, 14));
     }
 
     private static void restoreDatabaseConfig() {

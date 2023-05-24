@@ -29,7 +29,7 @@ public class LoginForm {
             } catch (SQLException ex) {
                 JOptionPane.showMessageDialog(Main.mainFrame,
                         SQLExceptionMessageWrapper.getWrappedSQLStateMessage(ex.getSQLState(), ex.getMessage()),
-                        "Ошибка подключения к системе",
+                        "Ошибка входа",
                         JOptionPane.ERROR_MESSAGE);
             }
         });

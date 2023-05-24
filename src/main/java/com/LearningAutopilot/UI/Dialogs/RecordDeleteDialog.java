@@ -38,6 +38,8 @@ public class RecordDeleteDialog extends JDialog {
                         SQLExceptionMessageWrapper.getWrappedSQLStateMessage(ex.getSQLState(), ex.getMessage()),
                         "Ошибка удаления записи",
                         JOptionPane.ERROR_MESSAGE);
+            } finally {
+                dispose();
             }
         });
     }
@@ -50,9 +52,6 @@ public class RecordDeleteDialog extends JDialog {
 
         String deleteProcedure = tableSQLHelper.getDeleteProcedure() + "('" + record_ID + "')";
         stmt.executeUpdate(deleteProcedure);
-
-
-        dispose();
     }
 
 
