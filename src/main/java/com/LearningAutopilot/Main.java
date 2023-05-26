@@ -36,24 +36,6 @@ public class Main {
         restoreDatabaseConfig();
     }
 
-    private static void setupUI() {
-        Color fancyGreyTableSelection = new Color(75, 77, 77);
-        UIManager.put("Table.selectionBackground", fancyGreyTableSelection);
-        UIManager.put("Table.cellFocusColor", fancyGreyTableSelection);
-        UIManager.put("Table.showHorizontalLines", true);
-
-        UIManager.put("Component.focusWidth", 0);
-        //UIManager.put("Component.innerFocusWidth", 4);
-        UIManager.put("Component.borderWidth", 2);
-
-        //UIManager.put("Component.focusColor", Color.red);
-        Color fancyWhiteBorder = new Color(243, 242, 237);
-        UIManager.put("Component.focusedBorderColor", fancyWhiteBorder);
-        UIManager.put("Button.hoverBorderColor", fancyWhiteBorder);
-
-        UIManager.put("OptionPane.messageFont", new Font(null, Font.PLAIN, 14));
-    }
-
     private static void restoreDatabaseConfig() {
         try {
             DatabaseConfig.getInstance().restoreConfig();
@@ -66,11 +48,30 @@ public class Main {
         }
     }
 
+    private static void setupUI() {
+        Color fancyGreyTableSelection = new Color(75, 77, 77);
+        UIManager.put("Table.selectionBackground", fancyGreyTableSelection);
+        UIManager.put("Table.cellFocusColor", fancyGreyTableSelection);
+        UIManager.put("Table.showHorizontalLines", true);
+
+        UIManager.put("Component.focusWidth", 0);
+        UIManager.put("Component.borderWidth", 2);
+
+        Color fancyWhiteBorder = new Color(243, 242, 237);
+        UIManager.put("Component.focusedBorderColor", fancyWhiteBorder);
+        UIManager.put("Button.hoverBorderColor", fancyWhiteBorder);
+
+        UIManager.put("OptionPane.messageFont", new Font(null, Font.PLAIN, 14));
+
+        UIManager.put("Tree.paintLines", true);
+        UIManager.put("Tree.showDefaultIcons", true);
+    }
+
     public static void prepareForMacOS() {
         System.setProperty("apple.laf.useScreenMenuBar", "true");
         System.setProperty("apple.awt.application.name", UiConsts.APP_NAME);
         System.setProperty("com.apple.mrj.application.apple.menu.about.name", UiConsts.APP_NAME);
-        System.setProperty("apple.awt.application.appearance", "system");
+        System.setProperty("apple.awt.application.appearance", "NSAppearanceNameDarkAqua");
 
         FlatDesktop.setAboutHandler(() -> {
             AboutDialog dialog = new AboutDialog();

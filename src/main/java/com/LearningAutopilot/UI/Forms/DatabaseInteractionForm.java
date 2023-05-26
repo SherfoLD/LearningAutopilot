@@ -23,6 +23,7 @@ public class DatabaseInteractionForm {
     private JButton maintenanceRecordsTableButton;
     private JButton recordTypesTableButton;
     private JButton staffTableButton;
+    private JButton tasksButton;
 
     public DatabaseInteractionForm() {
         initAvailableTablesPanel();
@@ -36,6 +37,7 @@ public class DatabaseInteractionForm {
         maintenanceRecordsTableButton = new JButton();
         recordTypesTableButton = new JButton();
         staffTableButton = new JButton();
+        tasksButton = new JButton();
 
         initButtonsFont();
         initButtonsText();
@@ -53,6 +55,7 @@ public class DatabaseInteractionForm {
         maintenanceRecordsTableButton.setFont(buttonFont);
         recordTypesTableButton.setFont(buttonFont);
         staffTableButton.setFont(buttonFont);
+        tasksButton.setFont(buttonFont);
     }
 
     private void initButtonsText() {
@@ -62,6 +65,7 @@ public class DatabaseInteractionForm {
         maintenanceRecordsTableButton.setText("Maintenance Records (Журнал Обслуживания)");
         recordTypesTableButton.setText("Record Types (Тип Обслуживания)");
         staffTableButton.setText("Staff (Работники)");
+        tasksButton.setText("Задания");
     }
 
     private void initButtonsAction() {
@@ -71,6 +75,7 @@ public class DatabaseInteractionForm {
         maintenanceRecordsTableButton.addActionListener(e -> goToTableInteractionForm(new MaintenanceRecordsSQLHelper()));
         recordTypesTableButton.addActionListener(e -> goToTableInteractionForm(new RecordTypeSQLHelper()));
         staffTableButton.addActionListener(e -> goToTableInteractionForm(new StaffSQLHelper()));
+        tasksButton.addActionListener(e -> goToTasksForm());
     }
 
     private void initButtonsPlacement() {
@@ -80,10 +85,11 @@ public class DatabaseInteractionForm {
         availableTablesPanel.add(maintenanceRecordsTableButton, getGridConstraints(3));
         availableTablesPanel.add(recordTypesTableButton, getGridConstraints(4));
         availableTablesPanel.add(staffTableButton, getGridConstraints(5));
+        availableTablesPanel.add(tasksButton, getGridConstraints(6));
     }
 
     private void initAvailableTablesPanel() {
-        availableTablesPanel.setLayout(new GridLayoutManager(6, 1, new Insets(0, 75, 35, 75), -1, -1));
+        availableTablesPanel.setLayout(new GridLayoutManager(7, 1, new Insets(0, 75, 35, 75), -1, -1));
         componentsPanel.add(availableTablesPanel, getGridConstraints(1));
     }
 
@@ -105,5 +111,13 @@ public class DatabaseInteractionForm {
                     "Ошибка обращения к таблице",
                     JOptionPane.ERROR_MESSAGE);
         }
+    }
+
+    private void goToTasksForm(){
+        TasksForm tasksForm = new TasksForm();
+
+        Main.mainFrame.getContentPane().removeAll();
+        Main.mainFrame.add(tasksForm.getMainPanel());
+        Main.mainFrame.setVisible(true);
     }
 }
