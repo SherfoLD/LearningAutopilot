@@ -58,7 +58,7 @@ public class TopMenuBar extends JMenuBar {
         DatabaseConnectionDialog dialog = new DatabaseConnectionDialog();
 
         dialog.pack();
-        ComponentUtil.locateToCenter(dialog);
+        dialog.setLocationRelativeTo(Main.mainFrame);
         dialog.setVisible(true);
     }
 

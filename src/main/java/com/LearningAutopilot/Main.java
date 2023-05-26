@@ -1,7 +1,6 @@
 package com.LearningAutopilot;
 
 import com.LearningAutopilot.Exceptions.InvalidConfigException;
-import com.LearningAutopilot.UI.ComponentUtil;
 import com.LearningAutopilot.UI.Dialogs.AboutDialog;
 import com.LearningAutopilot.UI.Dialogs.DatabaseConnectionDialog;
 import com.LearningAutopilot.UI.Forms.LoginForm;
@@ -43,7 +42,7 @@ public class Main {
             DatabaseConnectionDialog dialog = new DatabaseConnectionDialog();
 
             dialog.pack();
-            ComponentUtil.locateToCenter(dialog);
+            dialog.setLocationRelativeTo(Main.mainFrame);
             dialog.setVisible(true);
         }
     }
@@ -77,7 +76,7 @@ public class Main {
             AboutDialog dialog = new AboutDialog();
 
             dialog.pack();
-            ComponentUtil.locateToCenter(dialog);
+            dialog.setLocationRelativeTo(Main.mainFrame);
             dialog.setVisible(true);
         });
     }

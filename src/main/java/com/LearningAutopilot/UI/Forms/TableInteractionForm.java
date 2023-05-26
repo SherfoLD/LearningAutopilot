@@ -3,7 +3,6 @@ package com.LearningAutopilot.UI.Forms;
 import com.LearningAutopilot.Exceptions.SQLExceptionMessageWrapper;
 import com.LearningAutopilot.Main;
 import com.LearningAutopilot.SQLHelper.ITableSQLHelper;
-import com.LearningAutopilot.UI.ComponentUtil;
 import com.LearningAutopilot.UI.Dialogs.RecordDeleteDialog;
 import com.LearningAutopilot.UI.Dialogs.RecordUpdateOrInsertDialog;
 import com.LearningAutopilot.UI.TableHelper.DatabaseTableModel;
@@ -57,7 +56,7 @@ public class TableInteractionForm {
         String ZERO_UUID = "00000000-0000-0000-0000-000000000000";
         RecordUpdateOrInsertDialog recordUpdateOrInsertDialog = new RecordUpdateOrInsertDialog(tableSQLHelper, ZERO_UUID);
         recordUpdateOrInsertDialog.pack();
-        ComponentUtil.locateToCenter(recordUpdateOrInsertDialog);
+        recordUpdateOrInsertDialog.setLocationRelativeTo(Main.mainFrame);
         recordUpdateOrInsertDialog.setVisible(true);
 
         databaseTableModel.refresh();
@@ -81,7 +80,7 @@ public class TableInteractionForm {
                 RecordUpdateOrInsertDialog recordUpdateOrInsertDialog = new RecordUpdateOrInsertDialog(tableSQLHelper, record_ID);
 
                 recordUpdateOrInsertDialog.pack();
-                ComponentUtil.locateToCenter(recordUpdateOrInsertDialog);
+                recordUpdateOrInsertDialog.setLocationRelativeTo(Main.mainFrame);
                 recordUpdateOrInsertDialog.setVisible(true);
 
                 databaseTableModel.refresh();
@@ -94,7 +93,7 @@ public class TableInteractionForm {
 
                 RecordDeleteDialog recordDeleteDialog = new RecordDeleteDialog(tableSQLHelper, record_ID);
                 recordDeleteDialog.pack();
-                ComponentUtil.locateToCenter(recordDeleteDialog);
+                recordDeleteDialog.setLocationRelativeTo(Main.mainFrame);
                 recordDeleteDialog.setVisible(true);
 
                 databaseTableModel.refresh();

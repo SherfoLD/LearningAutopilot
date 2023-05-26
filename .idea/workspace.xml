@@ -4,15 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="8703f918-a2fa-4c3a-922d-0fd6c14d1db5" name="Changes" comment="Removed unnecessary fields">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/UI/Forms/TasksForm.form" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/UI/Forms/TasksForm.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/UI/TasksHelper/TaskInfo.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/UI/TasksHelper/TaskTableModel.java" afterDir="false" />
+    <list default="true" id="8703f918-a2fa-4c3a-922d-0fd6c14d1db5" name="Changes" comment="Added architecture for other tasks in course work">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/UI/ComponentUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/UI/ComponentUtil.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/UI/Dialogs/RecordUpdateOrInsertDialog.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/UI/Dialogs/RecordUpdateOrInsertDialog.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/UI/Forms/DatabaseInteractionForm.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/UI/Forms/DatabaseInteractionForm.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/UI/Forms/TableInteractionForm.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/UI/Forms/TableInteractionForm.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/UI/TopMenuBar.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/UI/TopMenuBar.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -179,7 +177,7 @@
       <workItem from="1682270662550" duration="10977000" />
       <workItem from="1682327723230" duration="53545000" />
       <workItem from="1682683169767" duration="52939000" />
-      <workItem from="1683743390497" duration="185438000" />
+      <workItem from="1683743390497" duration="186963000" />
     </task>
     <task id="LOCAL-00001" summary="Empty main Frame with proper width, height and screen position created">
       <created>1682273847054</created>
@@ -356,7 +354,14 @@
       <option name="project" value="LOCAL" />
       <updated>1685124434391</updated>
     </task>
-    <option name="localTasksCounter" value="26" />
+    <task id="LOCAL-00026" summary="Added architecture for other tasks in course work">
+      <created>1685140801091</created>
+      <option name="number" value="00026" />
+      <option name="presentableId" value="LOCAL-00026" />
+      <option name="project" value="LOCAL" />
+      <updated>1685140801091</updated>
+    </task>
+    <option name="localTasksCounter" value="27" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -404,7 +409,8 @@
     <MESSAGE value="Parsing reworked, null values now working" />
     <MESSAGE value="Small changes" />
     <MESSAGE value="Removed unnecessary fields" />
-    <option name="LAST_COMMIT_MESSAGE" value="Removed unnecessary fields" />
+    <MESSAGE value="Added architecture for other tasks in course work" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added architecture for other tasks in course work" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
