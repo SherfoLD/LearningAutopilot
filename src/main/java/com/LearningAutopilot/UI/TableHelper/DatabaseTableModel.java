@@ -16,14 +16,11 @@ import java.util.ArrayList;
 public class DatabaseTableModel extends DefaultTableModel {
     private final ITableSQLHelper tableSQLHelper;
     private int initialColumnCount;
-    Object[][] tableData;
-    Object[] columnIdentifiers;
 
     public DatabaseTableModel(ITableSQLHelper tableSQLHelper) throws SQLException {
         this.tableSQLHelper = tableSQLHelper;
-        prepareTableData();
 
-        super.setDataVector(tableData, columnIdentifiers);
+        setTableData();
     }
 
     @Override
@@ -33,14 +30,13 @@ public class DatabaseTableModel extends DefaultTableModel {
 
     public void refresh(){
         try {
-            prepareTableData();
+            setTableData();
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(Main.mainFrame,
                     SQLExceptionMessageWrapper.getWrappedSQLStateMessage(ex.getSQLState(), ex.getMessage()),
                     "Ошибка обновления таблицы",
                     JOptionPane.ERROR_MESSAGE);
         }
-        super.setDataVector(tableData, columnIdentifiers);
     }
 
     public ResultSet getResultSet() throws SQLException {
@@ -53,7 +49,7 @@ public class DatabaseTableModel extends DefaultTableModel {
         return stmt.executeQuery(query);
     }
 
-    private void prepareTableData() throws SQLException {
+    private void setTableData() throws SQLException {
         ResultSet rs = getResultSet();
         initialColumnCount = rs.getMetaData().getColumnCount();
 
@@ -63,7 +59,7 @@ public class DatabaseTableModel extends DefaultTableModel {
             columnNamesArray.add(rs.getMetaData().getColumnName(i));
         }
         columnNamesArray.add("Actions");
-        columnIdentifiers = columnNamesArray.toArray(new String[0]);
+        Object[] columnIdentifiers = columnNamesArray.toArray(new String[0]);
 
         //Setup Table Data
         ArrayList<Object[]> ArrayListTableData = new ArrayList<>();
@@ -76,6 +72,8 @@ public class DatabaseTableModel extends DefaultTableModel {
 
             ArrayListTableData.add(rowData);
         }
-        tableData = ArrayListTableData.toArray(new Object[ArrayListTableData.size()][]);
+        Object[][] tableData = ArrayListTableData.toArray(new Object[ArrayListTableData.size()][]);
+
+        super.setDataVector(tableData, columnIdentifiers);
     }
 }
