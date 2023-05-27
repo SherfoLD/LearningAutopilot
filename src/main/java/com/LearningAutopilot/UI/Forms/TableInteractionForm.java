@@ -76,9 +76,10 @@ public class TableInteractionForm {
         return new ITableActionEvent() {
             @Override
             public void onEdit(int row) throws SQLException {
-                String record_ID = databaseTableModel.getValueAt(row, 0).toString();
-                RecordUpdateOrInsertDialog recordUpdateOrInsertDialog = new RecordUpdateOrInsertDialog(tableSQLHelper, record_ID);
+                int rowInModel = databaseTable.convertRowIndexToModel(row);
+                String record_ID = databaseTableModel.getValueAt(rowInModel, 0).toString();
 
+                RecordUpdateOrInsertDialog recordUpdateOrInsertDialog = new RecordUpdateOrInsertDialog(tableSQLHelper, record_ID);
                 recordUpdateOrInsertDialog.pack();
                 recordUpdateOrInsertDialog.setLocationRelativeTo(Main.mainFrame);
                 recordUpdateOrInsertDialog.setVisible(true);
@@ -89,7 +90,8 @@ public class TableInteractionForm {
 
             @Override
             public void onDelete(int row) {
-                String record_ID = databaseTableModel.getValueAt(row, 0).toString();
+                int rowInModel = databaseTable.convertRowIndexToModel(row);
+                String record_ID = databaseTableModel.getValueAt(rowInModel, 0).toString();
 
                 RecordDeleteDialog recordDeleteDialog = new RecordDeleteDialog(tableSQLHelper, record_ID);
                 recordDeleteDialog.pack();
