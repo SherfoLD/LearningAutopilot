@@ -42,7 +42,6 @@ public class TasksForm {
         tasksTree.addTreeSelectionListener(e -> {
             DefaultMutableTreeNode node = (DefaultMutableTreeNode)
                     tasksTree.getLastSelectedPathComponent();
-
             if (node == null)
                 return;
 
@@ -59,10 +58,10 @@ public class TasksForm {
             }
         });
 
-        JScrollPane treeView = new JScrollPane(tasksTree);
-        treeView.setBorder(new EmptyBorder(new Insets(0, 0, 0, 0)));
+        JScrollPane TaskTreeScrollPane = new JScrollPane(tasksTree);
+        TaskTreeScrollPane.setBorder(new EmptyBorder(new Insets(0, 0, 0, 0)));
 
-        treePanel.add(treeView, getGridConstraints(0));
+        treePanel.add(TaskTreeScrollPane,  getGridConstraints(0));
     }
 
 
@@ -71,7 +70,7 @@ public class TasksForm {
         taskTable = new JTable(taskTableModel);
         initTaskTableProperties();
 
-        tablePanel.add(new JScrollPane(taskTable), new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        tablePanel.add(new JScrollPane(taskTable), getGridConstraints(0));
     }
 
     private void initTaskTableProperties() {
@@ -95,39 +94,72 @@ public class TasksForm {
         //---a---
         itemInTree = new DefaultMutableTreeNode(
                 new TaskInfo("a. Составной многотабличный запрос с CASE-выражением",
-                        "SELECT * FROM \"Staff\"")
+                        "SELECT * FROM \"3_a\"")
         );
         subTree.add(itemInTree);
         //---c---
         subTreeItem = new DefaultMutableTreeNode("c. Запросы, содержащие подзапрос");
         subTree.add(subTreeItem);
         //c-1
-        itemInTree = new DefaultMutableTreeNode("В разделе SELECT");
+        itemInTree = new DefaultMutableTreeNode(
+                new TaskInfo("В разделе SELECT",
+                        "SELECT * FROM \"3_с_select\"")
+        );
         subTreeItem.add(itemInTree);
         //c-2
-        itemInTree = new DefaultMutableTreeNode("В разделе FROM");
+        itemInTree = new DefaultMutableTreeNode(
+                new TaskInfo("В разделе FROM",
+                        "SELECT * FROM \"3_с_from\"")
+        );
         subTreeItem.add(itemInTree);
         //c-3
-        itemInTree = new DefaultMutableTreeNode("В разделе WHERE");
+        itemInTree = new DefaultMutableTreeNode(
+                new TaskInfo("В разделе WHERE",
+                        "SELECT * FROM \"3_с_where\"")
+        );
         subTreeItem.add(itemInTree);
         //---d---
         subTreeItem = new DefaultMutableTreeNode("d. Коррелированные подзапросы");
         subTree.add(subTreeItem);
         //d-1
-        itemInTree = new DefaultMutableTreeNode("Первый");
+        itemInTree = new DefaultMutableTreeNode(
+                new TaskInfo("Первый",
+                        "SELECT * FROM \"3_d_first\"")
+        );
         subTreeItem.add(itemInTree);
         //d-2
-        itemInTree = new DefaultMutableTreeNode("Второй");
+        itemInTree = new DefaultMutableTreeNode(
+                new TaskInfo("Второй",
+                        "SELECT * FROM \"3_d_second\"")
+        );
         subTreeItem.add(itemInTree);
         //d-3
-        itemInTree = new DefaultMutableTreeNode("Третий");
+        itemInTree = new DefaultMutableTreeNode(
+                new TaskInfo("Третий",
+                        "SELECT * FROM \"3_d_third\"")
+        );
         subTreeItem.add(itemInTree);
         //---e---
-        itemInTree = new DefaultMutableTreeNode("e. Многотабличный запрос, содержащий группировку записей, агрегатные функции и параметр, используемый в разделе HAVING;");
+        itemInTree = new DefaultMutableTreeNode(
+                new TaskInfo("e. Многотабличный запрос, содержащий группировку записей, агрегатные функции и параметр, используемый в разделе HAVING",
+                        "SELECT * FROM \"3_e\"")
+        );
         subTree.add(itemInTree);
         //---f---
-        itemInTree = new DefaultMutableTreeNode("f. Запросы, содержащий предикат ANY(SOME)  или ALL (для каждого предиката);");
-        subTree.add(itemInTree);
+        subTreeItem = new DefaultMutableTreeNode("f. Запросы, содержащие предикат ANY(SOME) или ALL");
+        subTree.add(subTreeItem);
+        //f-1
+        itemInTree = new DefaultMutableTreeNode(
+                new TaskInfo("ANY(SOME)",
+                        "SELECT * FROM \"3_f_any\"")
+        );
+        subTreeItem.add(itemInTree);
+        //f-2
+        itemInTree = new DefaultMutableTreeNode(
+                new TaskInfo("ALL",
+                        "SELECT * FROM \"3_f_all\"")
+        );
+        subTreeItem.add(itemInTree);
 
         //-----Пункт 7-----
         subTree = new DefaultMutableTreeNode("Пункт 4");
@@ -146,6 +178,19 @@ public class TasksForm {
     }
 
     private GridConstraints getGridConstraints(int gridRow) {
-        return new GridConstraints(gridRow, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false);
+        return new GridConstraints(gridRow,
+                0,
+                1,
+                1,
+                GridConstraints.ANCHOR_CENTER,
+                GridConstraints.FILL_BOTH,
+                GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
+                GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
+                null,
+                new Dimension(200, -1),
+                null,
+                0,
+                false
+        );
     }
 }
