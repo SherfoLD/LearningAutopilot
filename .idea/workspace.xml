@@ -4,13 +4,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="8703f918-a2fa-4c3a-922d-0fd6c14d1db5" name="Changes" comment="Added architecture for other tasks in course work">
+    <list default="true" id="8703f918-a2fa-4c3a-922d-0fd6c14d1db5" name="Changes" comment="Fixed a bug which cause abnormal expansion of JScrollPane in JTree">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/UI/ComponentUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/UI/ComponentUtil.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/SQLHelper/EquipmentSQLHelper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/SQLHelper/EquipmentSQLHelper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/SQLHelper/StaffSQLHelper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/SQLHelper/StaffSQLHelper.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/UI/Dialogs/RecordUpdateOrInsertDialog.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/UI/Dialogs/RecordUpdateOrInsertDialog.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/UI/Forms/TableInteractionForm.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/UI/Forms/TableInteractionForm.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/UI/TopMenuBar.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/UI/TopMenuBar.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/UI/Forms/TasksForm.form" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/UI/Forms/TasksForm.form" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/UI/Forms/TasksForm.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/UI/Forms/TasksForm.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/UI/TasksHelper/TaskTableModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/UI/TasksHelper/TaskTableModel.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -177,7 +178,7 @@
       <workItem from="1682270662550" duration="10977000" />
       <workItem from="1682327723230" duration="53545000" />
       <workItem from="1682683169767" duration="52939000" />
-      <workItem from="1683743390497" duration="186963000" />
+      <workItem from="1683743390497" duration="216972000" />
     </task>
     <task id="LOCAL-00001" summary="Empty main Frame with proper width, height and screen position created">
       <created>1682273847054</created>
@@ -361,7 +362,42 @@
       <option name="project" value="LOCAL" />
       <updated>1685140801091</updated>
     </task>
-    <option name="localTasksCounter" value="27" />
+    <task id="LOCAL-00027" summary="All dialogs are relative to Main frame now">
+      <created>1685143893392</created>
+      <option name="number" value="00027" />
+      <option name="presentableId" value="LOCAL-00027" />
+      <option name="project" value="LOCAL" />
+      <updated>1685143893392</updated>
+    </task>
+    <task id="LOCAL-00028" summary="Fixed a bug where if table was sorted, id was retrieved from wrong row">
+      <created>1685185793715</created>
+      <option name="number" value="00028" />
+      <option name="presentableId" value="LOCAL-00028" />
+      <option name="project" value="LOCAL" />
+      <updated>1685185793715</updated>
+    </task>
+    <task id="LOCAL-00029" summary="Fixed a bug which cause abnormal expansion of JScrollPane in JTree">
+      <created>1685395171835</created>
+      <option name="number" value="00029" />
+      <option name="presentableId" value="LOCAL-00029" />
+      <option name="project" value="LOCAL" />
+      <updated>1685395171835</updated>
+    </task>
+    <task id="LOCAL-00030" summary="Fixed a bug which cause abnormal expansion of JScrollPane in JTree">
+      <created>1685395433692</created>
+      <option name="number" value="00030" />
+      <option name="presentableId" value="LOCAL-00030" />
+      <option name="project" value="LOCAL" />
+      <updated>1685395433692</updated>
+    </task>
+    <task id="LOCAL-00031" summary="Fixed a bug which cause abnormal expansion of JScrollPane in JTree">
+      <created>1685398033889</created>
+      <option name="number" value="00031" />
+      <option name="presentableId" value="LOCAL-00031" />
+      <option name="project" value="LOCAL" />
+      <updated>1685398033889</updated>
+    </task>
+    <option name="localTasksCounter" value="32" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -385,9 +421,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Empty main Frame with proper width, height and screen position created" />
-    <MESSAGE value="Added basic structure, connection to Postgres and simple login form to setup connection. Need to change Forms from single tones to normal ones" />
-    <MESSAGE value="Removed unnecessary single tone in LoginForm and DatabaseInteractionForm. Fixed newForm appearance.&#10;Strange bug: FATAL: database &quot;&lt;user&gt;&quot; does not exist.&#10;Need to set MainFrame to single tone" />
     <MESSAGE value="Small commit before implementing DatabaseInteraction" />
     <MESSAGE value="All tables in database now displayed in DatabaseInteractionForm, added simple table interaction in TableInteractionForm" />
     <MESSAGE value="Added base for buttons do Table of TableInteractionForm" />
@@ -410,18 +443,12 @@
     <MESSAGE value="Small changes" />
     <MESSAGE value="Removed unnecessary fields" />
     <MESSAGE value="Added architecture for other tasks in course work" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added architecture for other tasks in course work" />
+    <MESSAGE value="All dialogs are relative to Main frame now" />
+    <MESSAGE value="Fixed a bug where if table was sorted, id was retrieved from wrong row" />
+    <MESSAGE value="Fixed a bug which cause abnormal expansion of JScrollPane in JTree" />
+    <option name="LAST_COMMIT_MESSAGE" value="Fixed a bug which cause abnormal expansion of JScrollPane in JTree" />
   </component>
   <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/LearningAutopilot/UI/Dialogs/ForeignKeysParser.java</url>
-          <line>25</line>
-          <option name="timeStamp" value="53" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
     <pin-to-top-manager>
       <pinned-members>
         <PinnedItemInfo parentTag="com.formdev.flatlaf.ui.FlatComboBoxUI$2" memberName="BasicComboBoxUI$ComboBoxLayoutManager.this$0" />

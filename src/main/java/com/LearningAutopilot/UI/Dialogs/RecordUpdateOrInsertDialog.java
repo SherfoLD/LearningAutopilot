@@ -49,7 +49,7 @@ public class RecordUpdateOrInsertDialog extends JDialog {
                         JOptionPane.ERROR_MESSAGE);
             } catch (InvalidFieldDataException ex) {
                 JOptionPane.showMessageDialog(Main.mainFrame,
-                        "Поля должны содержать только буквы, цифры и тире" +
+                        "Поля должны содержать только буквы, цифры, тире и знаки препинания" +
                                 "\n Вы ввели: " + ex.getMessage(),
                         "Ошибка добавления/изменения записи",
                         JOptionPane.ERROR_MESSAGE);
@@ -77,17 +77,17 @@ public class RecordUpdateOrInsertDialog extends JDialog {
 
             //Check Insert Or Update
             String fieldData = "";
-            String[] valuePair = new String[2];
+            String[] selectedBefore = new String[2];
             if (!record_ID.equals(ZERO_UUID)) {
                 fieldData = rs.getString(i);
                 if (foreignKeys.contains(fieldName))
-                    valuePair = foreignKeysParser.getForeignKeyValuePair(fieldName, fieldData);
+                    selectedBefore = foreignKeysParser.getForeignKeyValuePair(fieldName, fieldData);
             }
 
             //Add ComboBox or TextField
             if (foreignKeys.contains(fieldName)) {
                 HashMap<String, String> foreignKeyCorrelation = foreignKeysParser.getForeignKeyCorrelation(fieldName);
-                addRecordComboBox(foreignKeyCorrelation, valuePair, i * 2 - 1);
+                addRecordComboBox(foreignKeyCorrelation, selectedBefore, i * 2 - 1);
             } else
                 addRecordField(fieldData, i * 2 - 1);
         }
@@ -129,7 +129,7 @@ public class RecordUpdateOrInsertDialog extends JDialog {
     }
 
     private boolean isContainsStrangeSymbols(String fieldData) {
-        String pattern = "[a-zA-Zа-яА-Я0-9\\s-]*";
+        String pattern = "[a-zA-Zа-яА-Я0-9\\s-+().,]*";
 
         return !Pattern.matches(pattern, fieldData);
     }
@@ -166,7 +166,7 @@ public class RecordUpdateOrInsertDialog extends JDialog {
         }
         fieldMatcher.appendTail(finalProcedureQuery);
         finalProcedureQuery.insert(0, nonFieldsQuery);
-        String finalProcedureQueryString = unquoteNullValues(finalProcedureQuery);
+        String finalProcedureQueryString = unquoteNullValues(finalProcedureQuery); //Unquoting null values
 
         return finalProcedureQueryString;
     }
@@ -191,14 +191,14 @@ public class RecordUpdateOrInsertDialog extends JDialog {
         recordFieldsPanel.add(recordField, getGridConstraints(gridRow));
     }
 
-    private void addRecordComboBox(HashMap<String, String> foreignKeyCorrelation, String[] valuePair, int gridRow) {
+    private void addRecordComboBox(HashMap<String, String> foreignKeyCorrelation, String[] selectedBefore, int gridRow) {
         String[][] toArray = new String[foreignKeyCorrelation.size()][2];
         int index = 0;
         int selectionIndex = 0;
         for (Map.Entry<String, String> entry : foreignKeyCorrelation.entrySet()) {
             toArray[index][0] = entry.getKey();
             toArray[index][1] = entry.getValue();
-            if (toArray[index][0].equals(valuePair[0]))
+            if (toArray[index][0].equals(selectedBefore[0]))
                 selectionIndex = index;
             index++;
         }

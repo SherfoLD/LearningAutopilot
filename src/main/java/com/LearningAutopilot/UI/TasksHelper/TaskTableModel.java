@@ -13,7 +13,7 @@ public class TaskTableModel extends DefaultTableModel {
     private String sqlQuery;
 
     public TaskTableModel() {
-        setDefaultTableData();
+        setPlaceholderData();
     }
 
     public ResultSet getResultSet() throws SQLException {
@@ -25,7 +25,7 @@ public class TaskTableModel extends DefaultTableModel {
         return stmt.executeQuery(sqlQuery);
     }
 
-    private void setDefaultTableData() {
+    private void setPlaceholderData() {
         super.setDataVector(new Object[][]{{"Выберите пункт"}}, new Object[]{"Ожидание"});
     }
 
