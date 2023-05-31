@@ -61,7 +61,7 @@ public class TasksForm {
         JScrollPane TaskTreeScrollPane = new JScrollPane(tasksTree);
         TaskTreeScrollPane.setBorder(new EmptyBorder(new Insets(0, 0, 0, 0)));
 
-        treePanel.add(TaskTreeScrollPane,  getGridConstraints(0));
+        treePanel.add(TaskTreeScrollPane, getGridConstraints(0));
     }
 
 
@@ -187,7 +187,7 @@ public class TasksForm {
                 GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
                 GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
                 null,
-                new Dimension(200, -1),
+                null,
                 null,
                 0,
                 false
