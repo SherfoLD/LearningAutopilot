@@ -4,14 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="8703f918-a2fa-4c3a-922d-0fd6c14d1db5" name="Changes" comment="Fixed a bug which cause abnormal expansion of JScrollPane in JTree">
+    <list default="true" id="8703f918-a2fa-4c3a-922d-0fd6c14d1db5" name="Changes" comment="Change naming a bit for more readability">
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/UI/Dialogs/UpdateBalanceCostDialog.form" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/UI/Dialogs/UpdateBalanceCostDialog.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/SQLHelper/EquipmentSQLHelper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/SQLHelper/EquipmentSQLHelper.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/SQLHelper/StaffSQLHelper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/SQLHelper/StaffSQLHelper.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/UI/Dialogs/RecordUpdateOrInsertDialog.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/UI/Dialogs/RecordUpdateOrInsertDialog.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/UI/Forms/TasksForm.form" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/UI/Forms/TasksForm.form" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/UI/Forms/TasksForm.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/UI/Forms/TasksForm.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/UI/TasksHelper/TaskTableModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/UI/TasksHelper/TaskTableModel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/UI/Forms/TableInteractionForm.form" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/UI/Forms/TableInteractionForm.form" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/UI/Forms/TableInteractionForm.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/UI/Forms/TableInteractionForm.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -69,7 +67,7 @@
     "project.structure.last.edited": "Modules",
     "project.structure.proportion": "0.0",
     "project.structure.side.proportion": "0.2",
-    "settings.editor.selected.configurable": "reference.projectsettings.compiler.javacompiler",
+    "settings.editor.selected.configurable": "project.propGUI",
     "vue.rearranger.settings.migration": "true"
   },
   "keyToStringList": {
@@ -178,7 +176,7 @@
       <workItem from="1682270662550" duration="10977000" />
       <workItem from="1682327723230" duration="53545000" />
       <workItem from="1682683169767" duration="52939000" />
-      <workItem from="1683743390497" duration="216972000" />
+      <workItem from="1683743390497" duration="226120000" />
     </task>
     <task id="LOCAL-00001" summary="Empty main Frame with proper width, height and screen position created">
       <created>1682273847054</created>
@@ -397,7 +395,28 @@
       <option name="project" value="LOCAL" />
       <updated>1685398033889</updated>
     </task>
-    <option name="localTasksCounter" value="32" />
+    <task id="LOCAL-00032" summary="True fix of a bug which cause abnormal expansion of JScrollPane in JTree">
+      <created>1685567646132</created>
+      <option name="number" value="00032" />
+      <option name="presentableId" value="LOCAL-00032" />
+      <option name="project" value="LOCAL" />
+      <updated>1685567646132</updated>
+    </task>
+    <task id="LOCAL-00033" summary="Changes in Helpers, because database model of them changed">
+      <created>1685567800473</created>
+      <option name="number" value="00033" />
+      <option name="presentableId" value="LOCAL-00033" />
+      <option name="project" value="LOCAL" />
+      <updated>1685567800473</updated>
+    </task>
+    <task id="LOCAL-00034" summary="Change naming a bit for more readability">
+      <created>1685567854342</created>
+      <option name="number" value="00034" />
+      <option name="presentableId" value="LOCAL-00034" />
+      <option name="project" value="LOCAL" />
+      <updated>1685567854342</updated>
+    </task>
+    <option name="localTasksCounter" value="35" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -421,9 +440,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Small commit before implementing DatabaseInteraction" />
-    <MESSAGE value="All tables in database now displayed in DatabaseInteractionForm, added simple table interaction in TableInteractionForm" />
-    <MESSAGE value="Added base for buttons do Table of TableInteractionForm" />
     <MESSAGE value="Rebased database table model initialization from TableInteractionForm to own class (DatabaseTableModel)" />
     <MESSAGE value="Small visual changes to buttons in Table of TableInteractionForm" />
     <MESSAGE value="Working build before implementing event handler" />
@@ -446,7 +462,10 @@
     <MESSAGE value="All dialogs are relative to Main frame now" />
     <MESSAGE value="Fixed a bug where if table was sorted, id was retrieved from wrong row" />
     <MESSAGE value="Fixed a bug which cause abnormal expansion of JScrollPane in JTree" />
-    <option name="LAST_COMMIT_MESSAGE" value="Fixed a bug which cause abnormal expansion of JScrollPane in JTree" />
+    <MESSAGE value="True fix of a bug which cause abnormal expansion of JScrollPane in JTree" />
+    <MESSAGE value="Changes in Helpers, because database model of them changed" />
+    <MESSAGE value="Change naming a bit for more readability" />
+    <option name="LAST_COMMIT_MESSAGE" value="Change naming a bit for more readability" />
   </component>
   <component name="XDebuggerManager">
     <pin-to-top-manager>

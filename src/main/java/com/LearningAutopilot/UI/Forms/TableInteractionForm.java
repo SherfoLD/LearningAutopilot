@@ -2,9 +2,11 @@ package com.LearningAutopilot.UI.Forms;
 
 import com.LearningAutopilot.Exceptions.SQLExceptionMessageWrapper;
 import com.LearningAutopilot.Main;
+import com.LearningAutopilot.SQLHelper.EquipmentSQLHelper;
 import com.LearningAutopilot.SQLHelper.ITableSQLHelper;
 import com.LearningAutopilot.UI.Dialogs.RecordDeleteDialog;
 import com.LearningAutopilot.UI.Dialogs.RecordUpdateOrInsertDialog;
+import com.LearningAutopilot.UI.Dialogs.UpdateBalanceCostDialog;
 import com.LearningAutopilot.UI.TableHelper.DatabaseTableModel;
 import com.LearningAutopilot.UI.TableHelper.ITableActionEvent;
 import com.LearningAutopilot.UI.TableHelper.TableActionCellEditor;
@@ -26,6 +28,7 @@ public class TableInteractionForm {
     private JPanel databaseTablePanel;
     private JButton goBackButton;
     private JButton insertRecordButton;
+    private JButton updateBalanceCostButton;
     private JTable databaseTable;
     DatabaseTableModel databaseTableModel;
     private JLabel tableEditLabel;
@@ -36,10 +39,12 @@ public class TableInteractionForm {
     public TableInteractionForm(ITableSQLHelper tableSQLHelper) throws SQLException {
         this.tableSQLHelper = tableSQLHelper;
 
+        setupUpdateBalanceCostButton();
         initLabel();
         initDatabaseTableModel();
 
         goBackButton.addActionListener(e -> goToDatabaseInteractionForm());
+        updateBalanceCostButton.addActionListener(e -> updateBalanceCost());
         insertRecordButton.addActionListener(e -> {
             try {
                 insertRecord();
@@ -62,14 +67,6 @@ public class TableInteractionForm {
         databaseTableModel.refresh();
         int panelActionColumn = databaseTableModel.getColumnCount() - 1;
         initDatabaseTableProperties(panelActionColumn, getPanelActionEvent(panelActionColumn));
-    }
-
-    private void goToDatabaseInteractionForm() {
-        Main.mainFrame.getContentPane().removeAll();
-
-        DatabaseInteractionForm databaseInteractionForm = new DatabaseInteractionForm();
-        Main.mainFrame.add(databaseInteractionForm.getMainPanel());
-        Main.mainFrame.setVisible(true);
     }
 
     private ITableActionEvent getPanelActionEvent(int panelActionColumn) {
@@ -104,6 +101,25 @@ public class TableInteractionForm {
         };
     }
 
+    private void goToDatabaseInteractionForm() {
+        Main.mainFrame.getContentPane().removeAll();
+
+        DatabaseInteractionForm databaseInteractionForm = new DatabaseInteractionForm();
+        Main.mainFrame.add(databaseInteractionForm.getMainPanel());
+        Main.mainFrame.setVisible(true);
+    }
+
+    private void updateBalanceCost() {
+        UpdateBalanceCostDialog updateBalanceCostDialog = new UpdateBalanceCostDialog();
+        updateBalanceCostDialog.pack();
+        updateBalanceCostDialog.setLocationRelativeTo(Main.mainFrame);
+        updateBalanceCostDialog.setVisible(true);
+
+        databaseTableModel.refresh();
+        int panelActionColumn = databaseTableModel.getColumnCount() - 1;
+        initDatabaseTableProperties(panelActionColumn, getPanelActionEvent(panelActionColumn));
+    }
+
     private void initDatabaseTableModel() throws SQLException {
         databaseTableModel = new DatabaseTableModel(tableSQLHelper);
         databaseTable = new JTable(databaseTableModel);
@@ -112,7 +128,6 @@ public class TableInteractionForm {
 
         databaseTablePanel.add(new JScrollPane(databaseTable), new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
     }
-
 
     public void initDatabaseTableProperties(int panelActionColumn, ITableActionEvent event) {
         databaseTable.setRowHeight(40);
@@ -126,6 +141,11 @@ public class TableInteractionForm {
         databaseTable.getColumnModel().getColumn(panelActionColumn).setCellEditor(new TableActionCellEditor(event));
         //Column with ID removed
         databaseTable.removeColumn(databaseTable.getColumnModel().getColumn(0));
+    }
+
+    private void setupUpdateBalanceCostButton() {
+        if (!(tableSQLHelper instanceof EquipmentSQLHelper))
+            updateBalanceCostButton.setVisible(false);
     }
 
     private void initLabel() {
