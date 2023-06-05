@@ -1,13 +1,11 @@
 package com.LearningAutopilot.UI;
 
 import com.LearningAutopilot.DatabaseConnection;
-import com.LearningAutopilot.Exceptions.SQLExceptionMessageWrapper;
 import com.LearningAutopilot.Main;
 import com.LearningAutopilot.UI.Dialogs.DatabaseConnectionDialog;
 import com.LearningAutopilot.UI.Forms.LoginForm;
 
 import javax.swing.*;
-import java.sql.SQLException;
 
 public class TopMenuBar extends JMenuBar {
 
@@ -39,16 +37,7 @@ public class TopMenuBar extends JMenuBar {
         // Log Out from DB
         JMenuItem databaseLogOutItem = new JMenuItem();
         databaseLogOutItem.setText("Выйти из учетной записи");
-        databaseLogOutItem.addActionListener(e -> {
-            try {
-                executeLogOut();
-            } catch (SQLException ex) {
-                JOptionPane.showMessageDialog(Main.mainFrame,
-                        SQLExceptionMessageWrapper.getWrappedSQLStateMessage(ex.getSQLState(), ex.getMessage()),
-                        "Ошибка закрытия соединения",
-                        JOptionPane.ERROR_MESSAGE);
-            }
-        });
+        databaseLogOutItem.addActionListener(e -> executeLogOut());
         appMenu.add(databaseLogOutItem);
 
         topMenuBar.add(appMenu);
@@ -62,7 +51,7 @@ public class TopMenuBar extends JMenuBar {
         dialog.setVisible(true);
     }
 
-    private void executeLogOut() throws SQLException {
+    private void executeLogOut() {
         DatabaseConnection.getInstance().closeConnection();
 
         Main.mainFrame.getContentPane().removeAll();

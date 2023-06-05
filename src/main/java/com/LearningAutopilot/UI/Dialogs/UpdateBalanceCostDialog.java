@@ -9,6 +9,8 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class UpdateBalanceCostDialog extends JDialog {
     private JPanel contentPane;
@@ -16,6 +18,7 @@ public class UpdateBalanceCostDialog extends JDialog {
     private JButton userConfirmationYesButton;
     private JButton userConfirmationNoButton;
     private JScrollPane scrollPane;
+    private static final Logger logger = LoggerFactory.getLogger(UpdateBalanceCostDialog.class);
 
     public UpdateBalanceCostDialog() {
         super(Main.mainFrame, "Удаление записи");
@@ -29,6 +32,7 @@ public class UpdateBalanceCostDialog extends JDialog {
             try {
                 updateBalanceCost();
             } catch (SQLException ex) {
+                logger.error("SQL State: " + ex.getSQLState() + " Message: " + ex.getMessage());
                 JOptionPane.showMessageDialog(Main.mainFrame,
                         SQLExceptionMessageWrapper.getWrappedSQLStateMessage(ex.getSQLState(), ex.getMessage()),
                         "Ошибка обновления стоимостей",
@@ -47,5 +51,7 @@ public class UpdateBalanceCostDialog extends JDialog {
 
         String finalProcedureQuery = "CALL \"Update_Balance_Cost\"()";
         stmt.executeUpdate(finalProcedureQuery);
+
+        logger.info("Query executed: " + finalProcedureQuery);
     }
 }

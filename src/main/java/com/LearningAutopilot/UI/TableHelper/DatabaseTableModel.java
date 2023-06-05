@@ -12,10 +12,13 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class DatabaseTableModel extends DefaultTableModel {
     private final ITableSQLHelper tableSQLHelper;
     private int initialColumnCount;
+    private static final Logger logger = LoggerFactory.getLogger(DatabaseTableModel.class);
 
     public DatabaseTableModel(ITableSQLHelper tableSQLHelper) throws SQLException {
         this.tableSQLHelper = tableSQLHelper;
@@ -32,6 +35,7 @@ public class DatabaseTableModel extends DefaultTableModel {
         try {
             setTableData();
         } catch (SQLException ex) {
+            logger.error("SQL State: " + ex.getSQLState() + " Message: " + ex.getMessage());
             JOptionPane.showMessageDialog(Main.mainFrame,
                     SQLExceptionMessageWrapper.getWrappedSQLStateMessage(ex.getSQLState(), ex.getMessage()),
                     "Ошибка обновления таблицы",
@@ -39,7 +43,7 @@ public class DatabaseTableModel extends DefaultTableModel {
         }
     }
 
-    public ResultSet getResultSet() throws SQLException {
+    public ResultSet getStarteResultSet() throws SQLException {
         Connection conn = DatabaseConnection.getInstance().getDbConnection();
         Statement stmt = conn.createStatement(
                 ResultSet.TYPE_SCROLL_INSENSITIVE,
@@ -50,7 +54,7 @@ public class DatabaseTableModel extends DefaultTableModel {
     }
 
     private void setTableData() throws SQLException {
-        ResultSet rs = getResultSet();
+        ResultSet rs = getStarteResultSet();
         initialColumnCount = rs.getMetaData().getColumnCount();
 
         //Setup Column Identifiers

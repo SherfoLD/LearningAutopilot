@@ -19,6 +19,10 @@
         <forms_rt.version>7.0.3</forms_rt.version>
         <lombok.version>1.18.26</lombok.version>
         <postgresql.version>42.6.0</postgresql.version>
+        <log4j-core.version>2.20.0</log4j-core.version>
+        <log4j-api.version>2.20.0</log4j-api.version>
+        <log4j-slf4j2-impl.version>2.20.0</log4j-slf4j2-impl.version>
+
     </properties>
 
     <dependencies>
@@ -57,6 +61,24 @@
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
             <version>${postgresql.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-core</artifactId>
+            <version>${log4j-core.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-api</artifactId>
+            <version>${log4j-api.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-slf4j2-impl</artifactId>
+            <version>${log4j-slf4j2-impl.version}</version>
         </dependency>
     </dependencies>
 

@@ -10,6 +10,8 @@ import lombok.Getter;
 import javax.swing.*;
 import java.awt.*;
 import java.sql.SQLException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class DatabaseInteractionForm {
     @Getter
@@ -24,6 +26,7 @@ public class DatabaseInteractionForm {
     private JButton recordTypesTableButton;
     private JButton staffTableButton;
     private JButton tasksButton;
+    private static final Logger logger = LoggerFactory.getLogger(DatabaseInteractionForm.class);
 
     public DatabaseInteractionForm() {
         initAvailableTablesPanel();
@@ -106,6 +109,7 @@ public class DatabaseInteractionForm {
             Main.mainFrame.add(tableInteractionForm.getMainPanel());
             Main.mainFrame.setVisible(true);
         } catch (SQLException ex) {
+            logger.error("SQL State: " + ex.getSQLState() + " Message: " + ex.getMessage());
             JOptionPane.showMessageDialog(Main.mainFrame,
                     SQLExceptionMessageWrapper.getWrappedSQLStateMessage(ex.getSQLState(), ex.getMessage()),
                     "Ошибка обращения к таблице",

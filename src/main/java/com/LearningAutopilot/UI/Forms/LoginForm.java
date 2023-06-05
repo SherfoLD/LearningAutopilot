@@ -9,6 +9,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.net.URL;
 import java.sql.SQLException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class LoginForm {
     @Getter
@@ -20,6 +22,8 @@ public class LoginForm {
     private JButton userConfirmButton;
     private JLabel loginPictureLabel;
     private JPasswordField userPasswordField;
+    private static final Logger logger = LoggerFactory.getLogger(LoginForm.class);
+
 
     public LoginForm() {
         initIcon();
@@ -27,6 +31,7 @@ public class LoginForm {
             try {
                 setupConnection();
             } catch (SQLException ex) {
+                logger.error("SQL State: " + ex.getSQLState() + " Message: " + ex.getMessage());
                 JOptionPane.showMessageDialog(Main.mainFrame,
                         SQLExceptionMessageWrapper.getWrappedSQLStateMessage(ex.getSQLState(), ex.getMessage()),
                         "Ошибка входа",
@@ -39,6 +44,7 @@ public class LoginForm {
         String userLogin = userLoginField.getText();
         String userPassword = new String(userPasswordField.getPassword());
         DatabaseConnection.getInstance().initializeConnection(userLogin, userPassword);
+        logger.info("User " + userLogin + " logged in");
 
         goToDatabaseInteractionForm();
     }

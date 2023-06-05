@@ -79,8 +79,6 @@ public class TasksForm {
         taskTable.setFont(new Font(null, Font.PLAIN, 14));
         taskTable.getTableHeader().setReorderingAllowed(false);
         taskTable.getTableHeader().setFont(new Font(null, Font.BOLD, 14));
-        //Column with ID removed
-        //taskTable.removeColumn(databaseTable.getColumnModel().getColumn(0));
     }
 
     private void createNodes(DefaultMutableTreeNode mainTreeNode) {
@@ -160,13 +158,6 @@ public class TasksForm {
                         "SELECT * FROM \"3_f_all\"")
         );
         subTreeItem.add(itemInTree);
-
-        //-----Пункт 7-----
-        subTree = new DefaultMutableTreeNode("Пункт 4");
-        mainTreeNode.add(subTree);
-        //---4---
-        itemInTree = new DefaultMutableTreeNode("Провести транзакцию");
-        subTree.add(itemInTree);
     }
 
     private void goToDatabaseInteractionForm() {

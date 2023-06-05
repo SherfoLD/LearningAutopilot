@@ -10,6 +10,8 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
 
 public class RecordDeleteDialog extends JDialog {
     private JPanel contentPane;
@@ -19,6 +21,7 @@ public class RecordDeleteDialog extends JDialog {
     private JButton userConfirmationYesButton;
     private final ITableSQLHelper tableSQLHelper;
     private final String record_ID;
+    private static final Logger logger = LoggerFactory.getLogger(RecordDeleteDialog.class);
 
     public RecordDeleteDialog(ITableSQLHelper tableSQLHelper, String record_ID) {
         super(Main.mainFrame, "Удаление записи");
@@ -34,6 +37,7 @@ public class RecordDeleteDialog extends JDialog {
             try {
                 executeDelete();
             } catch (SQLException ex) {
+                logger.error("SQL State: " + ex.getSQLState() + " Message: " + ex.getMessage());
                 JOptionPane.showMessageDialog(Main.mainFrame,
                         SQLExceptionMessageWrapper.getWrappedSQLStateMessage(ex.getSQLState(), ex.getMessage()),
                         "Ошибка удаления записи",
@@ -52,13 +56,7 @@ public class RecordDeleteDialog extends JDialog {
 
         String deleteProcedure = tableSQLHelper.getDeleteProcedure() + "('" + record_ID + "')";
         stmt.executeUpdate(deleteProcedure);
-    }
 
-
-    public static void main(String[] args) {
-       /* RecordDeleteDialog dialog = new RecordDeleteDialog(new EquipmentCategoriesSQLHelper(), "3869a5e2-9dec-4d44-91d3-cdadf5253401");
-        dialog.pack();
-        dialog.setVisible(true);
-        System.exit(0);*/
+        logger.info("Query executed: " + deleteProcedure);
     }
 }

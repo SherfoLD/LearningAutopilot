@@ -9,14 +9,19 @@ import com.LearningAutopilot.UI.UiConsts;
 import com.formdev.flatlaf.extras.FlatDesktop;
 import com.formdev.flatlaf.intellijthemes.FlatXcodeDarkIJTheme;
 import com.formdev.flatlaf.util.SystemInfo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 import java.awt.*;
 
 public class Main {
     public static MainFrame mainFrame;
+    private final static Logger logger = LoggerFactory.getLogger(Main.class);
 
     public static void main(String[] args) {
+        logger.info("App Started");
+
         if (SystemInfo.isMacOS) {
             prepareForMacOS();
         }
@@ -38,7 +43,9 @@ public class Main {
     private static void restoreDatabaseConfig() {
         try {
             DatabaseConfig.getInstance().restoreConfig();
-        } catch (InvalidConfigException e) {
+        } catch (InvalidConfigException ex) {
+            logger.error("Connection config error: " + ex.getMessage());
+
             DatabaseConnectionDialog dialog = new DatabaseConnectionDialog();
 
             dialog.pack();

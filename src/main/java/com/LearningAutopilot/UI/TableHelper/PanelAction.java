@@ -10,12 +10,15 @@ import javax.swing.*;
 import java.awt.*;
 import java.net.URL;
 import java.sql.SQLException;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
 
 public class PanelAction extends JPanel {
     private ActionButton tableEditButton;
     private ActionButton tableDeleteButton;
     private static ImageIcon tableDeleteIcon;
     private static ImageIcon tableEditIcon;
+    private static final Logger logger = LoggerFactory.getLogger(PanelAction.class);
 
     static {
         // Delete Icon initialization
@@ -46,7 +49,7 @@ public class PanelAction extends JPanel {
             try {
                 event.onEdit(row);
             } catch (SQLException ex) {
-                System.out.println(ex.getMessage());
+                logger.error("SQL State: " + ex.getSQLState() + " Message: " + ex.getMessage());
                 JOptionPane.showMessageDialog(Main.mainFrame,
                         SQLExceptionMessageWrapper.getWrappedSQLStateMessage(ex.getSQLState(), ex.getMessage()),
                         "Ошибка добавления/изменения записи",

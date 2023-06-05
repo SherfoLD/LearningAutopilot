@@ -17,6 +17,8 @@ import lombok.Getter;
 import javax.swing.*;
 import java.awt.*;
 import java.sql.SQLException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 public class TableInteractionForm {
@@ -34,6 +36,7 @@ public class TableInteractionForm {
     private JLabel tableEditLabel;
     private JLabel tableDeleteLabel;
     private final ITableSQLHelper tableSQLHelper;
+    private static final Logger logger = LoggerFactory.getLogger(TableInteractionForm.class);
 
 
     public TableInteractionForm(ITableSQLHelper tableSQLHelper) throws SQLException {
@@ -49,6 +52,7 @@ public class TableInteractionForm {
             try {
                 insertRecord();
             } catch (SQLException ex) {
+                logger.error("SQL State: " + ex.getSQLState() + " Message: " + ex.getMessage());
                 JOptionPane.showMessageDialog(Main.mainFrame,
                         SQLExceptionMessageWrapper.getWrappedSQLStateMessage(ex.getSQLState(), ex.getMessage()),
                         "Ошибка добавления/изменения записи",

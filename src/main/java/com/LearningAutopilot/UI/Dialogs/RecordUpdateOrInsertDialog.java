@@ -19,6 +19,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class RecordUpdateOrInsertDialog extends JDialog {
     private JPanel contentPane;
@@ -29,6 +31,7 @@ public class RecordUpdateOrInsertDialog extends JDialog {
     private final ITableSQLHelper tableSQLHelper;
     private final String record_ID;
     private final String ZERO_UUID = "00000000-0000-0000-0000-000000000000";
+    private static final Logger logger = LoggerFactory.getLogger(RecordUpdateOrInsertDialog.class);
 
 
     public RecordUpdateOrInsertDialog(ITableSQLHelper tableSQLHelper, String record_ID) throws SQLException {
@@ -43,11 +46,14 @@ public class RecordUpdateOrInsertDialog extends JDialog {
             try {
                 updateRecord();
             } catch (SQLException ex) {
+                logger.error("SQL State: " + ex.getSQLState() + " Message: " + ex.getMessage());
                 JOptionPane.showMessageDialog(Main.mainFrame,
                         SQLExceptionMessageWrapper.getWrappedSQLStateMessage(ex.getSQLState(), ex.getMessage()),
                         "Ошибка добавления/изменения записи",
                         JOptionPane.ERROR_MESSAGE);
+
             } catch (InvalidFieldDataException ex) {
+                logger.error("Message" + ex.getMessage());
                 JOptionPane.showMessageDialog(Main.mainFrame,
                         "Поля должны содержать только буквы, цифры, тире и знаки препинания" +
                                 "\n Вы ввели: " + ex.getMessage(),
@@ -126,6 +132,8 @@ public class RecordUpdateOrInsertDialog extends JDialog {
         stmt.executeUpdate(finalProcedureQuery);
 
         dispose();
+
+        logger.info("Query executed: " + finalProcedureQuery);
     }
 
     private boolean isContainsStrangeSymbols(String fieldData) {
