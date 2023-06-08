@@ -1,0 +1,1546 @@
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 15.2
+-- Dumped by pg_dump version 15.2
+
+-- Started on 2023-06-07 22:01:36 MSK
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET xmloption = content;
+SET client_min_messages = warning;
+SET row_security = off;
+
+--
+-- TOC entry 2 (class 3079 OID 25931)
+-- Name: pg_trgm; Type: EXTENSION; Schema: -; Owner: -
+--
+
+CREATE EXTENSION IF NOT EXISTS pg_trgm WITH SCHEMA public;
+
+
+--
+-- TOC entry 3854 (class 0 OID 0)
+-- Dependencies: 2
+-- Name: EXTENSION pg_trgm; Type: COMMENT; Schema: -; Owner: 
+--
+
+COMMENT ON EXTENSION pg_trgm IS 'text similarity measurement and index searching based on trigrams';
+
+
+--
+-- TOC entry 294 (class 1255 OID 25397)
+-- Name: Add_MaintenanceRecord(); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION public."Add_MaintenanceRecord"() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+DECLARE
+    record_type uuid;
+BEGIN
+    IF TG_OP = 'INSERT' THEN
+        record_type = '48b6d732-9875-4235-b4a2-c248eaa1b678'; --ID of "Add" value in "RecordTypes"
+	ELSIF TG_OP = 'UPDATE' AND NEW."Balance_Cost" = 0 AND OLD."Balance_Cost" <> 0 THEN
+        record_type = '9519e68c-fa93-40b7-95ff-b359f25cc41b'; --ID of "Out of maintance" value in "RecordTypes"
+    ELSIF TG_OP = 'UPDATE' THEN
+        record_type = '443491bc-6102-4877-840a-e16a4a990491'; --ID of "Change" value in "RecordTypes"
+    END IF;
+    
+    INSERT INTO "MaintenanceRecords" ("Equipment", "Record_Date", "Record_Type", "Description")
+    VALUES (NEW."ID_Equipment", current_date, record_type, '');
+    
+    RETURN NEW;
+END;
+$$;
+
+
+ALTER FUNCTION public."Add_MaintenanceRecord"() OWNER TO postgres;
+
+--
+-- TOC entry 299 (class 1255 OID 25712)
+-- Name: Calculate_Balance_Cost(uuid); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION public."Calculate_Balance_Cost"(e_id uuid) RETURNS bigint
+    LANGUAGE plpgsql
+    AS $$
+DECLARE
+	e_purchace_cost bigint;
+	e_purchace_date date;
+	e_end_of_life date;
+BEGIN
+	SELECT 
+		"Purchase_Cost",
+		"Purchase_Date",
+		"End_Of_Life"
+	INTO
+		e_purchace_cost,
+		e_purchace_date,
+		e_end_of_life
+	FROM "Equipment"
+	WHERE "ID_Equipment" = e_id;
+	
+	IF (e_end_of_life <= current_date) THEN
+		RETURN 0;
+	ELSE
+		RETURN 	e_purchace_cost * (e_end_of_life - current_date) / (e_end_of_life - e_purchace_date); --расчет balance_cost
+	END IF;
+END;
+$$;
+
+
+ALTER FUNCTION public."Calculate_Balance_Cost"(e_id uuid) OWNER TO postgres;
+
+--
+-- TOC entry 281 (class 1255 OID 25367)
+-- Name: Classrooms_Delete(uuid); Type: PROCEDURE; Schema: public; Owner: postgres
+--
+
+CREATE PROCEDURE public."Classrooms_Delete"(IN c_id uuid)
+    LANGUAGE plpgsql
+    AS $$
+BEGIN
+    DELETE FROM "Classrooms"
+    WHERE "ID_Classroom" = c_id;
+END;
+$$;
+
+
+ALTER PROCEDURE public."Classrooms_Delete"(IN c_id uuid) OWNER TO postgres;
+
+--
+-- TOC entry 293 (class 1255 OID 25366)
+-- Name: Classrooms_UpdateOrInsert(uuid, integer, text, uuid); Type: PROCEDURE; Schema: public; Owner: postgres
+--
+
+CREATE PROCEDURE public."Classrooms_UpdateOrInsert"(IN c_id uuid, IN c_office_number integer, IN c_location_address text, IN c_owner uuid)
+    LANGUAGE plpgsql
+    AS $$
+DECLARE 
+	zero_uuid uuid;
+BEGIN
+	zero_uuid := '00000000-0000-0000-0000-000000000000';
+	IF c_id = zero_uuid THEN
+		INSERT INTO "Classrooms" ("Office_Number", "Location_Address", "Owner")
+        VALUES (c_office_number, c_location_address, c_owner);
+	ELSE
+		UPDATE "Classrooms"
+		SET "Office_Number" = c_office_number,
+			"Location_Address" = c_location_address,
+			"Owner" = c_owner
+		WHERE "ID_Classroom" = c_id;
+	END IF;
+END;
+$$;
+
+
+ALTER PROCEDURE public."Classrooms_UpdateOrInsert"(IN c_id uuid, IN c_office_number integer, IN c_location_address text, IN c_owner uuid) OWNER TO postgres;
+
+--
+-- TOC entry 300 (class 1255 OID 25231)
+-- Name: EquipmentCategories_Delete(uuid); Type: PROCEDURE; Schema: public; Owner: postgres
+--
+
+CREATE PROCEDURE public."EquipmentCategories_Delete"(IN category_id uuid)
+    LANGUAGE plpgsql
+    AS $$
+BEGIN
+	DELETE FROM "EquipmentCategories"
+	WHERE "ID_Category" = category_id;
+END
+$$;
+
+
+ALTER PROCEDURE public."EquipmentCategories_Delete"(IN category_id uuid) OWNER TO postgres;
+
+--
+-- TOC entry 279 (class 1255 OID 25244)
+-- Name: EquipmentCategories_UpdateOrInsert(uuid, text, text); Type: PROCEDURE; Schema: public; Owner: postgres
+--
+
+CREATE PROCEDURE public."EquipmentCategories_UpdateOrInsert"(IN category_id uuid, IN category_name text, IN category_description text)
+    LANGUAGE plpgsql
+    AS $$
+DECLARE 
+	zero_uuid uuid;
+BEGIN
+	zero_uuid := '00000000-0000-0000-0000-000000000000';
+    IF category_id = zero_uuid THEN
+        INSERT INTO "EquipmentCategories" ("Category", "Description")
+        VALUES (category_name, category_description);
+    ELSE
+        UPDATE "EquipmentCategories"
+        SET "Category" = category_name, "Description" = category_description
+        WHERE "ID_Category" = category_id;
+    END IF;
+END;
+$$;
+
+
+ALTER PROCEDURE public."EquipmentCategories_UpdateOrInsert"(IN category_id uuid, IN category_name text, IN category_description text) OWNER TO postgres;
+
+--
+-- TOC entry 278 (class 1255 OID 25293)
+-- Name: Equipment_Delete(uuid); Type: PROCEDURE; Schema: public; Owner: postgres
+--
+
+CREATE PROCEDURE public."Equipment_Delete"(IN e_id uuid)
+    LANGUAGE plpgsql
+    AS $$
+BEGIN
+    DELETE FROM "Equipment"
+    WHERE "ID_Equipment" = e_id;
+END;
+$$;
+
+
+ALTER PROCEDURE public."Equipment_Delete"(IN e_id uuid) OWNER TO postgres;
+
+--
+-- TOC entry 295 (class 1255 OID 25292)
+-- Name: Equipment_UpdateOrInsert(uuid, integer, uuid, text, bigint, bigint, date, uuid); Type: PROCEDURE; Schema: public; Owner: postgres
+--
+
+CREATE PROCEDURE public."Equipment_UpdateOrInsert"(IN e_id uuid, IN e_invent_number integer, IN e_category uuid, IN e_model text, IN e_purchase_cost bigint, IN e_balance_cost bigint, IN e_end_of_life date, IN e_location uuid)
+    LANGUAGE plpgsql
+    AS $$
+DECLARE 
+	zero_uuid uuid;
+BEGIN
+	zero_uuid := '00000000-0000-0000-0000-000000000000';
+	IF e_id = zero_uuid THEN
+		INSERT INTO "Equipment" ("Invent_Number", "Category", "Model", "Purchase_Cost",  "Balance_Cost", "End_Of_Life", "Location")
+        VALUES (e_invent_number, e_category, e_model, e_purchase_cost, e_balance_cost, e_end_of_life, e_location);
+	ELSE
+		UPDATE "Equipment"
+		SET "Invent_Number" = e_invent_number,
+			"Category" = e_category,
+			"Model" = e_model,
+			"Purchase_Cost" = e_purchase_cost,
+			"Balance_Cost" = e_balance_cost,
+			"End_Of_Life" = e_end_of_life,
+			"Location" = e_location
+		WHERE "ID_Equipment" = e_id;
+	END IF;
+END;
+$$;
+
+
+ALTER PROCEDURE public."Equipment_UpdateOrInsert"(IN e_id uuid, IN e_invent_number integer, IN e_category uuid, IN e_model text, IN e_purchase_cost bigint, IN e_balance_cost bigint, IN e_end_of_life date, IN e_location uuid) OWNER TO postgres;
+
+--
+-- TOC entry 296 (class 1255 OID 25708)
+-- Name: Equipment_UpdateOrInsert(uuid, integer, uuid, text, date, bigint, bigint, date, uuid); Type: PROCEDURE; Schema: public; Owner: postgres
+--
+
+CREATE PROCEDURE public."Equipment_UpdateOrInsert"(IN e_id uuid, IN e_invent_number integer, IN e_category uuid, IN e_model text, IN e_purchase_date date, IN e_purchase_cost bigint, IN e_balance_cost bigint, IN e_end_of_life date, IN e_location uuid)
+    LANGUAGE plpgsql
+    AS $$
+DECLARE 
+	zero_uuid uuid;
+BEGIN
+	zero_uuid := '00000000-0000-0000-0000-000000000000';
+	IF e_id = zero_uuid THEN
+		INSERT INTO "Equipment" ("Invent_Number", "Category", "Model", "Purchase_Date", "Purchase_Cost",  "Balance_Cost", "End_Of_Life", "Location")
+        VALUES (e_invent_number, e_category, e_model, e_purchase_date, e_purchase_cost, e_balance_cost, e_end_of_life, e_location);
+	ELSE
+		UPDATE "Equipment"
+		SET "Invent_Number" = e_invent_number,
+			"Category" = e_category,
+			"Model" = e_model,
+			"Purchase_Date" = e_purchase_date,
+			"Purchase_Cost" = e_purchase_cost,
+			"Balance_Cost" = e_balance_cost,
+			"End_Of_Life" = e_end_of_life,
+			"Location" = e_location
+		WHERE "ID_Equipment" = e_id;
+	END IF;
+END;
+$$;
+
+
+ALTER PROCEDURE public."Equipment_UpdateOrInsert"(IN e_id uuid, IN e_invent_number integer, IN e_category uuid, IN e_model text, IN e_purchase_date date, IN e_purchase_cost bigint, IN e_balance_cost bigint, IN e_end_of_life date, IN e_location uuid) OWNER TO postgres;
+
+--
+-- TOC entry 303 (class 1255 OID 26018)
+-- Name: Get_All_Add_MaintenanceRecords(text); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION public."Get_All_Add_MaintenanceRecords"(record_type text) RETURNS TABLE(id uuid)
+    LANGUAGE plpgsql
+    AS $$
+BEGIN
+	RETURN QUERY
+		SELECT
+			"ID_Record"
+		FROM "MaintenanceRecords" AS m
+		JOIN "Equipment" AS e
+			ON m."Equipment" = e."ID_Equipment"
+		JOIN "RecordTypes" AS r
+			ON m."Record_Type" = r."ID_Type"
+		WHERE r."Record_Type" ~ record_type
+		ORDER BY e."Invent_Number";
+END;
+$$;
+
+
+ALTER FUNCTION public."Get_All_Add_MaintenanceRecords"(record_type text) OWNER TO postgres;
+
+--
+-- TOC entry 284 (class 1255 OID 25396)
+-- Name: MaintenanceRecords_Delete(uuid); Type: PROCEDURE; Schema: public; Owner: postgres
+--
+
+CREATE PROCEDURE public."MaintenanceRecords_Delete"(IN r_id uuid)
+    LANGUAGE plpgsql
+    AS $$
+BEGIN
+    DELETE FROM "MaintenanceRecords"
+    WHERE "ID_Record" = r_id;
+END;
+$$;
+
+
+ALTER PROCEDURE public."MaintenanceRecords_Delete"(IN r_id uuid) OWNER TO postgres;
+
+--
+-- TOC entry 285 (class 1255 OID 25395)
+-- Name: MaintenanceRecords_UpdateOrInsert(uuid, uuid, date, uuid, text); Type: PROCEDURE; Schema: public; Owner: postgres
+--
+
+CREATE PROCEDURE public."MaintenanceRecords_UpdateOrInsert"(IN r_id uuid, IN r_equipment uuid, IN r_record_date date, IN r_record_type uuid, IN r_description text)
+    LANGUAGE plpgsql
+    AS $$
+DECLARE 
+	zero_uuid uuid;
+BEGIN
+	zero_uuid := '00000000-0000-0000-0000-000000000000';
+	IF r_id = zero_uuid THEN
+		INSERT INTO "MaintenanceRecords" ("Equipment", "Record_Date", "Record_Type", "Description")
+        VALUES (r_equipment, r_record_date, r_record_type, r_description);
+	ELSE
+		UPDATE "MaintenanceRecords"
+		SET "ID_Record" = r_id,
+			"Equipment" = r_equipment,
+			"Record_Date" = r_record_date,
+			"Record_Type" = r_record_type,
+			"Description" = r_description
+		WHERE "ID_Record" = r_id;
+	END IF;
+END;
+$$;
+
+
+ALTER PROCEDURE public."MaintenanceRecords_UpdateOrInsert"(IN r_id uuid, IN r_equipment uuid, IN r_record_date date, IN r_record_type uuid, IN r_description text) OWNER TO postgres;
+
+--
+-- TOC entry 301 (class 1255 OID 25386)
+-- Name: RecordTypes_Delete(uuid); Type: PROCEDURE; Schema: public; Owner: postgres
+--
+
+CREATE PROCEDURE public."RecordTypes_Delete"(IN r_id uuid)
+    LANGUAGE plpgsql
+    AS $$
+BEGIN
+	DELETE FROM "RecordTypes"
+		WHERE "ID_Type" = r_id;
+END
+$$;
+
+
+ALTER PROCEDURE public."RecordTypes_Delete"(IN r_id uuid) OWNER TO postgres;
+
+--
+-- TOC entry 302 (class 1255 OID 25385)
+-- Name: RecordTypes_UpdateOrInsert(uuid, text); Type: PROCEDURE; Schema: public; Owner: postgres
+--
+
+CREATE PROCEDURE public."RecordTypes_UpdateOrInsert"(IN r_id uuid, IN r_record_type text)
+    LANGUAGE plpgsql
+    AS $$
+DECLARE 
+	zero_uuid uuid;
+BEGIN
+	zero_uuid := '00000000-0000-0000-0000-000000000000';
+	IF r_id = zero_uuid THEN
+		INSERT INTO "RecordTypes" ("Record_Type")
+        VALUES (r_record_type);
+	ELSE
+		UPDATE "RecordTypes"
+		SET "Record_Type" = r_record_type
+		WHERE "ID_Type" = r_id;
+	END IF;
+END;
+$$;
+
+
+ALTER PROCEDURE public."RecordTypes_UpdateOrInsert"(IN r_id uuid, IN r_record_type text) OWNER TO postgres;
+
+--
+-- TOC entry 276 (class 1255 OID 25535)
+-- Name: Staff_Delete(uuid); Type: PROCEDURE; Schema: public; Owner: postgres
+--
+
+CREATE PROCEDURE public."Staff_Delete"(IN s_id uuid)
+    LANGUAGE plpgsql
+    AS $$
+BEGIN
+	DELETE FROM "Staff"
+	WHERE "ID_Staff" = s_id;
+END
+$$;
+
+
+ALTER PROCEDURE public."Staff_Delete"(IN s_id uuid) OWNER TO postgres;
+
+--
+-- TOC entry 277 (class 1255 OID 25534)
+-- Name: Staff_UpdateOrInsert(uuid, text, text); Type: PROCEDURE; Schema: public; Owner: postgres
+--
+
+CREATE PROCEDURE public."Staff_UpdateOrInsert"(IN s_id uuid, IN s_fio text, IN s_phone text)
+    LANGUAGE plpgsql
+    AS $$
+DECLARE 
+	zero_uuid uuid;
+BEGIN
+	zero_uuid := '00000000-0000-0000-0000-000000000000';
+	IF s_id = zero_uuid THEN
+		INSERT INTO "Staff" ("FIO", "Phone")
+        VALUES (s_fio, s_phone);
+	ELSE
+		UPDATE "Staff"
+		SET "FIO" = s_fio,
+			"Phone" = s_phone
+		WHERE "ID_Staff" = s_id;
+	END IF;
+END;
+$$;
+
+
+ALTER PROCEDURE public."Staff_UpdateOrInsert"(IN s_id uuid, IN s_fio text, IN s_phone text) OWNER TO postgres;
+
+--
+-- TOC entry 298 (class 1255 OID 25812)
+-- Name: Update_3_b(); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION public."Update_3_b"() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+BEGIN
+    UPDATE "Classrooms"
+    SET
+      "Office_Number" = NEW."Office_Number",
+      "Location_Address" = NEW."Location_Address"
+    WHERE "Classrooms"."Owner" = OLD."ID_Staff";
+	
+	UPDATE "Staff"
+    SET
+      "FIO" = NEW."FIO",
+      "Phone" = NEW."Phone"
+    WHERE "ID_Staff" = OLD."ID_Staff";
+	
+	RETURN NEW;
+END;
+$$;
+
+
+ALTER FUNCTION public."Update_3_b"() OWNER TO postgres;
+
+--
+-- TOC entry 297 (class 1255 OID 25717)
+-- Name: Update_Balance_Cost(); Type: PROCEDURE; Schema: public; Owner: postgres
+--
+
+CREATE PROCEDURE public."Update_Balance_Cost"()
+    LANGUAGE plpgsql
+    AS $$
+DECLARE
+	new_balance_cost bigint;
+	"Balance_Cost_Cursor" CURSOR FOR
+		SELECT 
+			"ID_Equipment",
+			"Balance_Cost"
+		FROM "Equipment";
+BEGIN
+	FOR record IN "Balance_Cost_Cursor" LOOP
+		new_balance_cost := (SELECT "Calculate_Balance_Cost"(record."ID_Equipment"));
+		UPDATE "Equipment"
+			SET "Balance_Cost" = new_balance_cost
+			WHERE "ID_Equipment" = record."ID_Equipment";
+			
+ 		IF (record."Balance_Cost" <> 0 AND new_balance_cost >= 0) THEN
+ 			COMMIT;
+ 		ELSE
+ 			ROLLBACK;
+ 		END IF;
+		
+	END LOOP;
+END;
+$$;
+
+
+ALTER PROCEDURE public."Update_Balance_Cost"() OWNER TO postgres;
+
+SET default_tablespace = '';
+
+SET default_table_access_method = heap;
+
+--
+-- TOC entry 218 (class 1259 OID 25245)
+-- Name: Equipment; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public."Equipment" (
+    "ID_Equipment" uuid DEFAULT gen_random_uuid() NOT NULL,
+    "Invent_Number" integer NOT NULL,
+    "Category" uuid NOT NULL,
+    "Model" text NOT NULL,
+    "Purchase_Cost" bigint NOT NULL,
+    "Balance_Cost" bigint NOT NULL,
+    "End_Of_Life" date NOT NULL,
+    "Location" uuid NOT NULL,
+    "Purchase_Date" date NOT NULL
+);
+
+
+ALTER TABLE public."Equipment" OWNER TO postgres;
+
+--
+-- TOC entry 215 (class 1259 OID 25141)
+-- Name: EquipmentCategories; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public."EquipmentCategories" (
+    "ID_Category" uuid DEFAULT gen_random_uuid() NOT NULL,
+    "Category" text NOT NULL,
+    "Description" text
+);
+
+
+ALTER TABLE public."EquipmentCategories" OWNER TO postgres;
+
+--
+-- TOC entry 241 (class 1259 OID 25718)
+-- Name: 3_a; Type: VIEW; Schema: public; Owner: postgres
+--
+
+CREATE VIEW public."3_a" AS
+ SELECT e."Invent_Number",
+    ec."Category",
+    e."Model",
+    e."End_Of_Life",
+        CASE
+            WHEN ((e."End_Of_Life" - CURRENT_DATE) <= 0) THEN 'Срок жизни закончился'::text
+            WHEN ((e."End_Of_Life" - CURRENT_DATE) < 90) THEN 'Срок жизни подходит к концу'::text
+            ELSE 'Срок жизни в норме'::text
+        END AS "End_Of_Life_Message"
+   FROM (public."Equipment" e
+     JOIN public."EquipmentCategories" ec ON ((ec."ID_Category" = e."Category")));
+
+
+ALTER TABLE public."3_a" OWNER TO postgres;
+
+--
+-- TOC entry 217 (class 1259 OID 25171)
+-- Name: Classrooms; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public."Classrooms" (
+    "ID_Classroom" uuid DEFAULT gen_random_uuid() NOT NULL,
+    "Office_Number" integer NOT NULL,
+    "Location_Address" text NOT NULL,
+    "Owner" uuid NOT NULL
+);
+
+
+ALTER TABLE public."Classrooms" OWNER TO postgres;
+
+--
+-- TOC entry 216 (class 1259 OID 25161)
+-- Name: Staff; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public."Staff" (
+    "ID_Staff" uuid DEFAULT gen_random_uuid() NOT NULL,
+    "FIO" text NOT NULL,
+    "Phone" text NOT NULL
+);
+
+
+ALTER TABLE public."Staff" OWNER TO postgres;
+
+--
+-- TOC entry 243 (class 1259 OID 25814)
+-- Name: 3_b; Type: VIEW; Schema: public; Owner: postgres
+--
+
+CREATE VIEW public."3_b" AS
+ SELECT c."Office_Number",
+    c."Location_Address",
+    s."ID_Staff",
+    s."FIO",
+    s."Phone"
+   FROM (public."Classrooms" c
+     JOIN public."Staff" s ON ((c."Owner" = s."ID_Staff")));
+
+
+ALTER TABLE public."3_b" OWNER TO postgres;
+
+--
+-- TOC entry 233 (class 1259 OID 25552)
+-- Name: 3_d_first; Type: VIEW; Schema: public; Owner: postgres
+--
+
+CREATE VIEW public."3_d_first" AS
+ SELECT ec."Category",
+    ( SELECT sum(e."Purchase_Cost") AS sum
+           FROM public."Equipment" e
+          WHERE (e."Category" = ec."ID_Category")) AS "Total_Purchase_Cost"
+   FROM public."EquipmentCategories" ec;
+
+
+ALTER TABLE public."3_d_first" OWNER TO postgres;
+
+--
+-- TOC entry 221 (class 1259 OID 25320)
+-- Name: MaintenanceRecords; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public."MaintenanceRecords" (
+    "ID_Record" uuid DEFAULT gen_random_uuid() NOT NULL,
+    "Equipment" uuid NOT NULL,
+    "Record_Date" date NOT NULL,
+    "Record_Type" uuid NOT NULL,
+    "Description" text
+);
+
+
+ALTER TABLE public."MaintenanceRecords" OWNER TO postgres;
+
+--
+-- TOC entry 220 (class 1259 OID 25310)
+-- Name: RecordTypes; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public."RecordTypes" (
+    "ID_Type" uuid DEFAULT gen_random_uuid() NOT NULL,
+    "Record_Type" text NOT NULL
+);
+
+
+ALTER TABLE public."RecordTypes" OWNER TO postgres;
+
+--
+-- TOC entry 234 (class 1259 OID 25556)
+-- Name: 3_d_second; Type: VIEW; Schema: public; Owner: postgres
+--
+
+CREATE VIEW public."3_d_second" AS
+ SELECT ec."Category",
+    e."Model",
+    m."Record_Date" AS "Latest_Maintenance_Date",
+    r."Record_Type" AS "Latest_Maintenance_Type",
+    m."Description" AS "Latest_Maintenance_Description"
+   FROM (((public."Equipment" e
+     JOIN public."MaintenanceRecords" m ON ((e."ID_Equipment" = m."Equipment")))
+     JOIN public."RecordTypes" r ON ((r."ID_Type" = m."Record_Type")))
+     JOIN public."EquipmentCategories" ec ON ((ec."ID_Category" = e."Category")))
+  WHERE (m."Record_Date" = ( SELECT max("MaintenanceRecords"."Record_Date") AS max
+           FROM public."MaintenanceRecords"
+          WHERE ("MaintenanceRecords"."Equipment" = e."ID_Equipment")));
+
+
+ALTER TABLE public."3_d_second" OWNER TO postgres;
+
+--
+-- TOC entry 235 (class 1259 OID 25561)
+-- Name: 3_d_third; Type: VIEW; Schema: public; Owner: postgres
+--
+
+CREATE VIEW public."3_d_third" AS
+ SELECT ( SELECT s."FIO"
+           FROM (public."Staff" s
+             JOIN public."Classrooms" c ON ((s."ID_Staff" = c."Owner")))
+          WHERE (e."Location" = c."ID_Classroom")) AS "FIO",
+    e."Invent_Number",
+    ec."Category",
+    e."Model"
+   FROM (public."Equipment" e
+     JOIN public."EquipmentCategories" ec ON ((ec."ID_Category" = e."Category")));
+
+
+ALTER TABLE public."3_d_third" OWNER TO postgres;
+
+--
+-- TOC entry 236 (class 1259 OID 25566)
+-- Name: 3_e; Type: VIEW; Schema: public; Owner: postgres
+--
+
+CREATE VIEW public."3_e" AS
+ SELECT c."Office_Number",
+    ec."Category",
+    count(*) AS "Total_Equipment_Max"
+   FROM ((public."Classrooms" c
+     JOIN public."Equipment" e ON ((c."ID_Classroom" = e."Location")))
+     JOIN public."EquipmentCategories" ec ON ((e."Category" = ec."ID_Category")))
+  GROUP BY c."ID_Classroom", c."Office_Number", ec."Category"
+ HAVING (count(*) = ( SELECT max("Total_Equipment_In_Each_Classroom"."Total_Equipment") AS max
+           FROM ( SELECT c_1."ID_Classroom",
+                    c_1."Office_Number",
+                    ec_1."Category",
+                    count(*) AS "Total_Equipment"
+                   FROM ((public."Classrooms" c_1
+                     JOIN public."Equipment" e_1 ON ((c_1."ID_Classroom" = e_1."Location")))
+                     JOIN public."EquipmentCategories" ec_1 ON ((e_1."Category" = ec_1."ID_Category")))
+                  GROUP BY c_1."ID_Classroom", c_1."Office_Number", ec_1."Category") "Total_Equipment_In_Each_Classroom"
+          WHERE ("Total_Equipment_In_Each_Classroom"."ID_Classroom" = c."ID_Classroom")))
+  ORDER BY c."Office_Number";
+
+
+ALTER TABLE public."3_e" OWNER TO postgres;
+
+--
+-- TOC entry 237 (class 1259 OID 25579)
+-- Name: 3_f_all; Type: VIEW; Schema: public; Owner: postgres
+--
+
+CREATE VIEW public."3_f_all" AS
+ SELECT e."Invent_Number",
+    ec."Category",
+    e."Model",
+    e."End_Of_Life"
+   FROM (public."Equipment" e
+     JOIN public."EquipmentCategories" ec ON ((ec."ID_Category" = e."Category")))
+  WHERE (e."End_Of_Life" >= ALL ( SELECT "Equipment"."End_Of_Life"
+           FROM public."Equipment"));
+
+
+ALTER TABLE public."3_f_all" OWNER TO postgres;
+
+--
+-- TOC entry 238 (class 1259 OID 25583)
+-- Name: 3_f_any; Type: VIEW; Schema: public; Owner: postgres
+--
+
+CREATE VIEW public."3_f_any" AS
+ SELECT e."Invent_Number",
+    ec."Category",
+    e."Model",
+    e."End_Of_Life"
+   FROM (public."Equipment" e
+     JOIN public."EquipmentCategories" ec ON ((ec."ID_Category" = e."Category")))
+  WHERE ((ec."Category" = 'Мебель'::text) AND (e."Model" ~~ ANY (ARRAY['%Стол%'::text, '%Стул%'::text])));
+
+
+ALTER TABLE public."3_f_any" OWNER TO postgres;
+
+--
+-- TOC entry 229 (class 1259 OID 25484)
+-- Name: 3_с_from; Type: VIEW; Schema: public; Owner: postgres
+--
+
+CREATE VIEW public."3_с_from" AS
+ SELECT "Staff"."FIO",
+    "Equipment_In_Classroom"."Equipment_Count"
+   FROM ( SELECT c."Owner",
+            count(e."ID_Equipment") AS "Equipment_Count"
+           FROM (public."Classrooms" c
+             LEFT JOIN public."Equipment" e ON ((c."ID_Classroom" = e."Location")))
+          GROUP BY c."Owner") "Equipment_In_Classroom",
+    public."Staff"
+  WHERE ("Equipment_In_Classroom"."Owner" = "Staff"."ID_Staff");
+
+
+ALTER TABLE public."3_с_from" OWNER TO postgres;
+
+--
+-- TOC entry 228 (class 1259 OID 25479)
+-- Name: 3_с_select; Type: VIEW; Schema: public; Owner: postgres
+--
+
+CREATE VIEW public."3_с_select" AS
+ SELECT e."Invent_Number",
+    ec."Category",
+    e."Model",
+    ( SELECT count(*) AS count
+           FROM public."MaintenanceRecords"
+          WHERE ("MaintenanceRecords"."Equipment" = e."ID_Equipment")) AS "Maintenance_Record_Count"
+   FROM (public."Equipment" e
+     JOIN public."EquipmentCategories" ec ON ((ec."ID_Category" = e."Category")));
+
+
+ALTER TABLE public."3_с_select" OWNER TO postgres;
+
+--
+-- TOC entry 230 (class 1259 OID 25489)
+-- Name: 3_с_where; Type: VIEW; Schema: public; Owner: postgres
+--
+
+CREATE VIEW public."3_с_where" AS
+ SELECT e."Invent_Number",
+    ec."Category",
+    e."Model"
+   FROM (public."Equipment" e
+     JOIN public."EquipmentCategories" ec ON ((ec."ID_Category" = e."Category")))
+  WHERE (e."ID_Equipment" IN ( SELECT m."Equipment"
+           FROM (public."MaintenanceRecords" m
+             JOIN public."RecordTypes" r ON ((r."ID_Type" = m."Record_Type")))
+          WHERE (r."Record_Type" = 'Out of maintenance'::text)));
+
+
+ALTER TABLE public."3_с_where" OWNER TO postgres;
+
+--
+-- TOC entry 224 (class 1259 OID 25440)
+-- Name: Classrooms_ClientView; Type: VIEW; Schema: public; Owner: postgres
+--
+
+CREATE VIEW public."Classrooms_ClientView" AS
+ SELECT c."ID_Classroom",
+    c."Office_Number",
+    c."Location_Address",
+    s."FIO" AS "Owner"
+   FROM (public."Classrooms" c
+     JOIN public."Staff" s ON ((c."Owner" = s."ID_Staff")))
+  ORDER BY c."Office_Number";
+
+
+ALTER TABLE public."Classrooms_ClientView" OWNER TO postgres;
+
+--
+-- TOC entry 225 (class 1259 OID 25444)
+-- Name: Classrooms_RawView; Type: VIEW; Schema: public; Owner: postgres
+--
+
+CREATE VIEW public."Classrooms_RawView" AS
+ SELECT "Classrooms"."ID_Classroom",
+    "Classrooms"."Office_Number",
+    "Classrooms"."Location_Address",
+    "Classrooms"."Owner"
+   FROM public."Classrooms";
+
+
+ALTER TABLE public."Classrooms_RawView" OWNER TO postgres;
+
+--
+-- TOC entry 227 (class 1259 OID 25465)
+-- Name: EquipmentCategories_ClientView; Type: VIEW; Schema: public; Owner: postgres
+--
+
+CREATE VIEW public."EquipmentCategories_ClientView" AS
+ SELECT "EquipmentCategories"."ID_Category",
+    "EquipmentCategories"."Category",
+    "EquipmentCategories"."Description"
+   FROM public."EquipmentCategories"
+  ORDER BY "EquipmentCategories"."Category";
+
+
+ALTER TABLE public."EquipmentCategories_ClientView" OWNER TO postgres;
+
+--
+-- TOC entry 219 (class 1259 OID 25306)
+-- Name: EquipmentCategories_RawView; Type: VIEW; Schema: public; Owner: postgres
+--
+
+CREATE VIEW public."EquipmentCategories_RawView" AS
+ SELECT "EquipmentCategories"."ID_Category",
+    "EquipmentCategories"."Category",
+    "EquipmentCategories"."Description"
+   FROM public."EquipmentCategories";
+
+
+ALTER TABLE public."EquipmentCategories_RawView" OWNER TO postgres;
+
+--
+-- TOC entry 239 (class 1259 OID 25699)
+-- Name: Equipment_ClientView; Type: VIEW; Schema: public; Owner: postgres
+--
+
+CREATE VIEW public."Equipment_ClientView" AS
+ SELECT e."ID_Equipment",
+    e."Invent_Number",
+    ec."Category",
+    e."Model",
+    e."Purchase_Date",
+    e."Purchase_Cost",
+    e."Balance_Cost",
+    e."End_Of_Life",
+    c."Office_Number" AS "Location"
+   FROM ((public."Equipment" e
+     JOIN public."EquipmentCategories" ec ON ((e."Category" = ec."ID_Category")))
+     JOIN public."Classrooms" c ON ((e."Location" = c."ID_Classroom")))
+  ORDER BY e."Invent_Number";
+
+
+ALTER TABLE public."Equipment_ClientView" OWNER TO postgres;
+
+--
+-- TOC entry 240 (class 1259 OID 25704)
+-- Name: Equipment_RawView; Type: VIEW; Schema: public; Owner: postgres
+--
+
+CREATE VIEW public."Equipment_RawView" AS
+ SELECT "Equipment"."ID_Equipment",
+    "Equipment"."Invent_Number",
+    "Equipment"."Category",
+    "Equipment"."Model",
+    "Equipment"."Purchase_Date",
+    "Equipment"."Purchase_Cost",
+    "Equipment"."Balance_Cost",
+    "Equipment"."End_Of_Life",
+    "Equipment"."Location"
+   FROM public."Equipment";
+
+
+ALTER TABLE public."Equipment_RawView" OWNER TO postgres;
+
+--
+-- TOC entry 242 (class 1259 OID 25777)
+-- Name: MaintenanceRecords_ClientView; Type: VIEW; Schema: public; Owner: postgres
+--
+
+CREATE VIEW public."MaintenanceRecords_ClientView" AS
+ SELECT m."ID_Record",
+    e."Invent_Number" AS "Equipment",
+    m."Record_Date",
+    r."Record_Type",
+    m."Description"
+   FROM ((public."MaintenanceRecords" m
+     JOIN public."Equipment" e ON ((m."Equipment" = e."ID_Equipment")))
+     JOIN public."RecordTypes" r ON ((m."Record_Type" = r."ID_Type")))
+  ORDER BY m."Record_Date" DESC;
+
+
+ALTER TABLE public."MaintenanceRecords_ClientView" OWNER TO postgres;
+
+--
+-- TOC entry 223 (class 1259 OID 25391)
+-- Name: MaintenanceRecords_RawView; Type: VIEW; Schema: public; Owner: postgres
+--
+
+CREATE VIEW public."MaintenanceRecords_RawView" AS
+ SELECT "MaintenanceRecords"."ID_Record",
+    "MaintenanceRecords"."Equipment",
+    "MaintenanceRecords"."Record_Date",
+    "MaintenanceRecords"."Record_Type",
+    "MaintenanceRecords"."Description"
+   FROM public."MaintenanceRecords";
+
+
+ALTER TABLE public."MaintenanceRecords_RawView" OWNER TO postgres;
+
+--
+-- TOC entry 226 (class 1259 OID 25452)
+-- Name: RecordTypes_ClientView; Type: VIEW; Schema: public; Owner: postgres
+--
+
+CREATE VIEW public."RecordTypes_ClientView" AS
+ SELECT "RecordTypes"."ID_Type",
+    "RecordTypes"."Record_Type"
+   FROM public."RecordTypes"
+  ORDER BY "RecordTypes"."Record_Type";
+
+
+ALTER TABLE public."RecordTypes_ClientView" OWNER TO postgres;
+
+--
+-- TOC entry 222 (class 1259 OID 25381)
+-- Name: RecordTypes_RawView; Type: VIEW; Schema: public; Owner: postgres
+--
+
+CREATE VIEW public."RecordTypes_RawView" AS
+ SELECT "RecordTypes"."ID_Type",
+    "RecordTypes"."Record_Type"
+   FROM public."RecordTypes";
+
+
+ALTER TABLE public."RecordTypes_RawView" OWNER TO postgres;
+
+--
+-- TOC entry 231 (class 1259 OID 25526)
+-- Name: Staff_ClientView; Type: VIEW; Schema: public; Owner: postgres
+--
+
+CREATE VIEW public."Staff_ClientView" AS
+ SELECT "Staff"."ID_Staff",
+    "Staff"."FIO",
+    "Staff"."Phone"
+   FROM public."Staff"
+  ORDER BY "Staff"."FIO";
+
+
+ALTER TABLE public."Staff_ClientView" OWNER TO postgres;
+
+--
+-- TOC entry 232 (class 1259 OID 25530)
+-- Name: Staff_RawView; Type: VIEW; Schema: public; Owner: postgres
+--
+
+CREATE VIEW public."Staff_RawView" AS
+ SELECT "Staff"."ID_Staff",
+    "Staff"."FIO",
+    "Staff"."Phone"
+   FROM public."Staff";
+
+
+ALTER TABLE public."Staff_RawView" OWNER TO postgres;
+
+--
+-- TOC entry 3845 (class 0 OID 25171)
+-- Dependencies: 217
+-- Data for Name: Classrooms; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public."Classrooms" ("ID_Classroom", "Office_Number", "Location_Address", "Owner") FROM stdin;
+cb84af41-f9a5-42b9-a749-898a9258a242	228	Стромынка, 20	5e0d782a-05bc-4530-9f7f-b9a98b327def
+3ca93ae2-380e-4a40-970a-06948d6733bc	347	Стромынка, 20	72ef3dc6-9408-45b5-af7e-0862b3a8df64
+da6b1586-52f5-4ec6-9259-bf584fdfd31b	239	Стромынка, 20	72ef3dc6-9408-45b5-af7e-0862b3a8df64
+903e0b8e-bfe9-4e15-acf8-c1028b1b1793	100	пр. Вернадского, 78	52b7404c-9d83-4aeb-9556-8a24f58c9d01
+09bc1e2e-ae52-4938-b646-458c72848c4f	101	пр. Вернадского, 78	aa10127b-067f-46f0-aa2e-6a123d631de3
+\.
+
+
+--
+-- TOC entry 3846 (class 0 OID 25245)
+-- Dependencies: 218
+-- Data for Name: Equipment; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public."Equipment" ("ID_Equipment", "Invent_Number", "Category", "Model", "Purchase_Cost", "Balance_Cost", "End_Of_Life", "Location", "Purchase_Date") FROM stdin;
+e2298d07-8e36-4fac-9fe0-d4725fbb1f21	2000001	28c2693d-e1ef-4009-806f-9184dcf2d708	Стол Американский	780000	0	2024-05-25	cb84af41-f9a5-42b9-a749-898a9258a242	2016-10-15
+1efeb550-d600-4762-b341-67fd534bad54	2000000	28c2693d-e1ef-4009-806f-9184dcf2d708	Стол Индийский	650000	501533	2040-03-24	3ca93ae2-380e-4a40-970a-06948d6733bc	2018-06-13
+d9ad5b8a-417f-4b16-9fdd-58635ffdb7e2	3000000	813071cc-a68f-45c4-bc12-2058162cb6e9	Dell	10000	8950	2026-10-23	3ca93ae2-380e-4a40-970a-06948d6733bc	2023-01-10
+5025c55c-708c-40bc-af9a-ed09daa64ec2	3000001	813071cc-a68f-45c4-bc12-2058162cb6e9	Dell	10000	8879	2026-07-27	da6b1586-52f5-4ec6-9259-bf584fdfd31b	2023-01-10
+e75f9992-abac-485d-ba07-6e10053f586f	3000002	813071cc-a68f-45c4-bc12-2058162cb6e9	Dell	10000	9066	2027-04-13	cb84af41-f9a5-42b9-a749-898a9258a242	2023-01-10
+f6b9bd7f-fe6a-49a7-ac1a-df5f9ad7caf5	2000003	28c2693d-e1ef-4009-806f-9184dcf2d708	Шкаф Советский 	4000	1354	2030-03-23	da6b1586-52f5-4ec6-9259-bf584fdfd31b	2010-02-20
+db996934-fd41-481a-95d0-c05a0389158c	4000000	2516073e-2949-4145-9360-a49d340763a6	Stone Island	4000	450	2024-01-01	903e0b8e-bfe9-4e15-acf8-c1028b1b1793	2018-11-15
+3c4bc36a-b979-4970-9a45-446309d0f2a8	4000001	2516073e-2949-4145-9360-a49d340763a6	Stone Island	4000	582	2024-03-13	09bc1e2e-ae52-4938-b646-458c72848c4f	2018-11-17
+950b8607-3275-4255-ae14-758041de7641	2000002	28c2693d-e1ef-4009-806f-9184dcf2d708	Стул Железный	5000	732	2030-02-24	3ca93ae2-380e-4a40-970a-06948d6733bc	1984-03-28
+3ad6301b-67dd-4245-92aa-1c4f06b11f04	1000000	90864517-a672-4d1c-8183-0c6764635008	Dexp	45000	38620	2030-03-15	da6b1586-52f5-4ec6-9259-bf584fdfd31b	2022-04-21
+39d0b751-e572-453d-b564-b4ee011879cb	1000001	90864517-a672-4d1c-8183-0c6764635008	Baikal	75000	0	2023-05-29	da6b1586-52f5-4ec6-9259-bf584fdfd31b	2022-06-23
+\.
+
+
+--
+-- TOC entry 3843 (class 0 OID 25141)
+-- Dependencies: 215
+-- Data for Name: EquipmentCategories; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public."EquipmentCategories" ("ID_Category", "Category", "Description") FROM stdin;
+90864517-a672-4d1c-8183-0c6764635008	Компьютер	ИН- 1xxxxxx
+28c2693d-e1ef-4009-806f-9184dcf2d708	Мебель	ИН- 2xxxxxx. Стул, стол, шкаф, и т.д
+813071cc-a68f-45c4-bc12-2058162cb6e9	Проектор	ИН- 3xxxxxx
+2516073e-2949-4145-9360-a49d340763a6	Фломастер	ИН- 4xxxxxx
+\.
+
+
+--
+-- TOC entry 3848 (class 0 OID 25320)
+-- Dependencies: 221
+-- Data for Name: MaintenanceRecords; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public."MaintenanceRecords" ("ID_Record", "Equipment", "Record_Date", "Record_Type", "Description") FROM stdin;
+fd6d1858-0b5b-45d6-9805-701b5d842f36	e2298d07-8e36-4fac-9fe0-d4725fbb1f21	2023-06-02	9519e68c-fa93-40b7-95ff-b359f25cc41b	сломали второй раз
+49d317ec-0181-4dc2-b157-c13e63c28af8	39d0b751-e572-453d-b564-b4ee011879cb	2023-06-01	9519e68c-fa93-40b7-95ff-b359f25cc41b	Отвал
+5320f735-4823-46ce-9e43-5c39ed0f9497	3ad6301b-67dd-4245-92aa-1c4f06b11f04	2023-06-02	443491bc-6102-4877-840a-e16a4a990491	
+316bb6bd-f302-4742-8d95-3d5343ea0fd9	39d0b751-e572-453d-b564-b4ee011879cb	2023-06-02	443491bc-6102-4877-840a-e16a4a990491	
+31ab3af8-0ce8-4306-a24e-b7bfdba1333c	1efeb550-d600-4762-b341-67fd534bad54	2023-06-02	443491bc-6102-4877-840a-e16a4a990491	
+006dd3b2-0daf-4f77-83d7-b1d15c8b60a5	d9ad5b8a-417f-4b16-9fdd-58635ffdb7e2	2023-06-02	443491bc-6102-4877-840a-e16a4a990491	
+666a096e-9114-480c-a954-ffda2e82e2b2	d9ad5b8a-417f-4b16-9fdd-58635ffdb7e2	2023-05-28	48b6d732-9875-4235-b4a2-c248eaa1b678	
+c2b5634a-fb42-48c0-952d-3f3bf4d72412	5025c55c-708c-40bc-af9a-ed09daa64ec2	2023-05-28	48b6d732-9875-4235-b4a2-c248eaa1b678	
+c3693cb3-999a-455e-a4ca-916ef5881b9d	e75f9992-abac-485d-ba07-6e10053f586f	2023-05-28	48b6d732-9875-4235-b4a2-c248eaa1b678	
+885453b4-2c2f-4bec-9f95-d465137f08ee	db996934-fd41-481a-95d0-c05a0389158c	2023-05-28	48b6d732-9875-4235-b4a2-c248eaa1b678	
+c3cfcf05-db5e-4997-9e77-89e936087606	3c4bc36a-b979-4970-9a45-446309d0f2a8	2023-05-28	48b6d732-9875-4235-b4a2-c248eaa1b678	
+f60bdc59-0fde-422f-b485-2901f5cf855d	3ad6301b-67dd-4245-92aa-1c4f06b11f04	2023-05-28	48b6d732-9875-4235-b4a2-c248eaa1b678	
+9193c2d7-d4eb-4e3e-8598-673c3c139f96	1efeb550-d600-4762-b341-67fd534bad54	2023-05-28	48b6d732-9875-4235-b4a2-c248eaa1b678	
+82b6e07a-2139-4f5d-ab5b-5d17a3622a90	e2298d07-8e36-4fac-9fe0-d4725fbb1f21	2023-05-28	48b6d732-9875-4235-b4a2-c248eaa1b678	
+91415f8f-5404-4d15-be62-e809e0259812	e2298d07-8e36-4fac-9fe0-d4725fbb1f21	2023-05-28	9519e68c-fa93-40b7-95ff-b359f25cc41b	Сломали
+43748de2-863c-49ac-b8a2-ad66dab3c16a	39d0b751-e572-453d-b564-b4ee011879cb	2023-05-28	48b6d732-9875-4235-b4a2-c248eaa1b678	
+dcc4f30c-1237-47a6-be36-c97ed53d5ab5	950b8607-3275-4255-ae14-758041de7641	2023-05-28	48b6d732-9875-4235-b4a2-c248eaa1b678	
+a6ed8bc4-708e-4715-b7d5-23f2013b08fa	f6b9bd7f-fe6a-49a7-ac1a-df5f9ad7caf5	2023-05-28	48b6d732-9875-4235-b4a2-c248eaa1b678	
+404066bf-b335-4903-8670-44c1013d70de	3ad6301b-67dd-4245-92aa-1c4f06b11f04	2023-05-31	443491bc-6102-4877-840a-e16a4a990491	
+f5037bc3-36d9-4078-b597-002dffe74b87	3ad6301b-67dd-4245-92aa-1c4f06b11f04	2023-05-31	443491bc-6102-4877-840a-e16a4a990491	
+651e2266-fc60-49ae-b6d9-48116b23ef14	39d0b751-e572-453d-b564-b4ee011879cb	2023-05-31	443491bc-6102-4877-840a-e16a4a990491	
+60b26abe-9bc5-40be-8940-d3450700bc2e	1efeb550-d600-4762-b341-67fd534bad54	2023-05-31	443491bc-6102-4877-840a-e16a4a990491	
+db0de54d-5e13-4c61-8353-e0f4d86070f0	e2298d07-8e36-4fac-9fe0-d4725fbb1f21	2023-05-31	443491bc-6102-4877-840a-e16a4a990491	
+c07ef9fd-aaec-4e28-94ed-4f7345edfb5a	950b8607-3275-4255-ae14-758041de7641	2023-05-31	443491bc-6102-4877-840a-e16a4a990491	
+447547db-4f1c-46b3-819f-a6f55b3576e0	f6b9bd7f-fe6a-49a7-ac1a-df5f9ad7caf5	2023-05-31	443491bc-6102-4877-840a-e16a4a990491	
+3a61ce73-8673-4c54-b069-bb57b530be3e	d9ad5b8a-417f-4b16-9fdd-58635ffdb7e2	2023-05-31	443491bc-6102-4877-840a-e16a4a990491	
+52c25a77-aa2f-486b-9900-4137d48b0fa2	5025c55c-708c-40bc-af9a-ed09daa64ec2	2023-05-31	443491bc-6102-4877-840a-e16a4a990491	
+35ef3e7f-e56a-4267-bb01-542e53c6b419	e75f9992-abac-485d-ba07-6e10053f586f	2023-05-31	443491bc-6102-4877-840a-e16a4a990491	
+1d83ed57-0c25-4a18-b285-8269d3a44e98	db996934-fd41-481a-95d0-c05a0389158c	2023-05-31	443491bc-6102-4877-840a-e16a4a990491	
+c1ce36e4-c2d8-432a-a216-33031396b7c9	3c4bc36a-b979-4970-9a45-446309d0f2a8	2023-05-31	443491bc-6102-4877-840a-e16a4a990491	
+ca83e2d4-fa8c-4bd7-8585-67721cf49e3b	3ad6301b-67dd-4245-92aa-1c4f06b11f04	2023-06-01	443491bc-6102-4877-840a-e16a4a990491	
+056c9835-5ea8-4f54-b1ac-62c51b93c8fb	39d0b751-e572-453d-b564-b4ee011879cb	2023-06-01	443491bc-6102-4877-840a-e16a4a990491	
+2daf84e4-599d-45a5-8af6-64eb1a3bdf91	1efeb550-d600-4762-b341-67fd534bad54	2023-06-01	443491bc-6102-4877-840a-e16a4a990491	
+7ed6ea31-9fb0-4aec-ad0a-54bb615b8302	d9ad5b8a-417f-4b16-9fdd-58635ffdb7e2	2023-06-01	443491bc-6102-4877-840a-e16a4a990491	
+b09fb7e6-f33d-4cf6-bb82-4fa0fceb6ffb	5025c55c-708c-40bc-af9a-ed09daa64ec2	2023-06-01	443491bc-6102-4877-840a-e16a4a990491	
+31cc0e6d-c70d-4c22-a996-29d1eccb8ff8	e75f9992-abac-485d-ba07-6e10053f586f	2023-06-01	443491bc-6102-4877-840a-e16a4a990491	
+f10b0d5a-4ae0-4c98-91bd-f17192f36cec	3ad6301b-67dd-4245-92aa-1c4f06b11f04	2023-06-01	443491bc-6102-4877-840a-e16a4a990491	
+fb6b66c8-c863-4f0a-8ece-38fee84039a7	1efeb550-d600-4762-b341-67fd534bad54	2023-06-01	443491bc-6102-4877-840a-e16a4a990491	
+17d6716f-f493-4c0f-8d4d-887b1b4856a7	d9ad5b8a-417f-4b16-9fdd-58635ffdb7e2	2023-06-01	443491bc-6102-4877-840a-e16a4a990491	
+dbe1000b-d303-47af-b4c8-93599c313dda	5025c55c-708c-40bc-af9a-ed09daa64ec2	2023-06-01	443491bc-6102-4877-840a-e16a4a990491	
+798a0fa0-8786-41b2-ab35-256c0dc1684f	e75f9992-abac-485d-ba07-6e10053f586f	2023-06-01	443491bc-6102-4877-840a-e16a4a990491	
+ca7f4b72-9838-42cd-8e48-5c3c126a743a	e2298d07-8e36-4fac-9fe0-d4725fbb1f21	2023-06-01	443491bc-6102-4877-840a-e16a4a990491	
+0332ca57-7834-47da-98c0-ce32a4be825f	950b8607-3275-4255-ae14-758041de7641	2023-06-01	443491bc-6102-4877-840a-e16a4a990491	
+9a1ddb3e-db5b-45cb-9209-a83b3b4b83f5	f6b9bd7f-fe6a-49a7-ac1a-df5f9ad7caf5	2023-06-01	443491bc-6102-4877-840a-e16a4a990491	
+e464e0ab-a9b6-4182-9f75-3140203f68e6	db996934-fd41-481a-95d0-c05a0389158c	2023-06-01	443491bc-6102-4877-840a-e16a4a990491	
+0dda095d-7d06-4743-a3a3-9d037ae82da9	3c4bc36a-b979-4970-9a45-446309d0f2a8	2023-06-01	443491bc-6102-4877-840a-e16a4a990491	
+48bcf405-1926-40fa-84b5-05a191ec357c	e2298d07-8e36-4fac-9fe0-d4725fbb1f21	2023-06-01	9519e68c-fa93-40b7-95ff-b359f25cc41b	
+860656f5-9268-474c-9b02-aea5fb30e6ba	3ad6301b-67dd-4245-92aa-1c4f06b11f04	2023-06-01	443491bc-6102-4877-840a-e16a4a990491	
+9e5c4557-d181-4151-adae-55f2117541a3	39d0b751-e572-453d-b564-b4ee011879cb	2023-06-01	443491bc-6102-4877-840a-e16a4a990491	
+39d850d3-a668-468c-95af-58b94162a1ed	1efeb550-d600-4762-b341-67fd534bad54	2023-06-01	443491bc-6102-4877-840a-e16a4a990491	
+e3e51dc9-4763-4f01-a563-c02a54ddf8cb	d9ad5b8a-417f-4b16-9fdd-58635ffdb7e2	2023-06-01	443491bc-6102-4877-840a-e16a4a990491	
+ff684ffe-19b6-4a24-8150-00492bdd3c4b	5025c55c-708c-40bc-af9a-ed09daa64ec2	2023-06-01	443491bc-6102-4877-840a-e16a4a990491	
+66f71d7d-8fcc-4a6b-bbe2-ade7092d803b	e75f9992-abac-485d-ba07-6e10053f586f	2023-06-01	443491bc-6102-4877-840a-e16a4a990491	
+9a3a12e0-193e-4ed3-b8fd-7defda1f2861	950b8607-3275-4255-ae14-758041de7641	2023-06-01	443491bc-6102-4877-840a-e16a4a990491	
+bd9d6898-8a2f-4e41-9aa9-8b249943a20a	f6b9bd7f-fe6a-49a7-ac1a-df5f9ad7caf5	2023-06-01	443491bc-6102-4877-840a-e16a4a990491	
+329805bc-c341-4ec7-b52e-ad585a23f0d0	db996934-fd41-481a-95d0-c05a0389158c	2023-06-01	443491bc-6102-4877-840a-e16a4a990491	
+1450387c-4d92-49c3-b73a-e281aff6ab9e	3c4bc36a-b979-4970-9a45-446309d0f2a8	2023-06-01	443491bc-6102-4877-840a-e16a4a990491	
+cc70da6a-4bbe-4c8b-af3d-09d8b2c9984f	e2298d07-8e36-4fac-9fe0-d4725fbb1f21	2023-06-01	443491bc-6102-4877-840a-e16a4a990491	
+ef508e03-7d78-4878-8a1d-5ff5ad0de251	5025c55c-708c-40bc-af9a-ed09daa64ec2	2023-06-02	443491bc-6102-4877-840a-e16a4a990491	
+905a91c8-5cae-4d8f-832c-a8835fce32c6	e75f9992-abac-485d-ba07-6e10053f586f	2023-06-02	443491bc-6102-4877-840a-e16a4a990491	
+e550c9fc-39ca-4b7a-b1e3-a3f9a4e28d56	950b8607-3275-4255-ae14-758041de7641	2023-06-02	443491bc-6102-4877-840a-e16a4a990491	
+3e107c15-67fe-4b20-9187-dbdd834214ea	f6b9bd7f-fe6a-49a7-ac1a-df5f9ad7caf5	2023-06-02	443491bc-6102-4877-840a-e16a4a990491	
+5c870aff-a5eb-4cf9-b120-de7bceb4dc30	db996934-fd41-481a-95d0-c05a0389158c	2023-06-02	443491bc-6102-4877-840a-e16a4a990491	
+e26a535f-ed90-42ff-bb76-8601d14efbcf	3c4bc36a-b979-4970-9a45-446309d0f2a8	2023-06-02	443491bc-6102-4877-840a-e16a4a990491	
+1f84c780-6990-4cbb-b37b-9fe8dcc8d8f7	e2298d07-8e36-4fac-9fe0-d4725fbb1f21	2023-06-02	443491bc-6102-4877-840a-e16a4a990491	
+fc2a8493-4b53-432d-bf46-c6141b0d85e4	3ad6301b-67dd-4245-92aa-1c4f06b11f04	2023-06-02	443491bc-6102-4877-840a-e16a4a990491	
+50d4ae77-fd95-46ba-b505-9b28e8cdfc30	e2298d07-8e36-4fac-9fe0-d4725fbb1f21	2023-06-02	9519e68c-fa93-40b7-95ff-b359f25cc41b	Разбомбили
+be04385a-cf32-43bc-ad5b-492e41e1ee6c	1efeb550-d600-4762-b341-67fd534bad54	2023-06-02	443491bc-6102-4877-840a-e16a4a990491	
+6a065f01-5bf4-4003-96fd-3a853f4b2913	d9ad5b8a-417f-4b16-9fdd-58635ffdb7e2	2023-06-02	443491bc-6102-4877-840a-e16a4a990491	
+a54da693-167c-4814-83fa-d3dde6312ee9	5025c55c-708c-40bc-af9a-ed09daa64ec2	2023-06-02	443491bc-6102-4877-840a-e16a4a990491	
+5cdbc199-b571-4420-9f2c-7ff11fce9f22	e75f9992-abac-485d-ba07-6e10053f586f	2023-06-02	443491bc-6102-4877-840a-e16a4a990491	
+015c2a4f-f9e9-497f-862b-2df43ce2fe83	950b8607-3275-4255-ae14-758041de7641	2023-06-02	443491bc-6102-4877-840a-e16a4a990491	
+833d8f1f-661e-4583-9fba-2ca44e141f33	f6b9bd7f-fe6a-49a7-ac1a-df5f9ad7caf5	2023-06-02	443491bc-6102-4877-840a-e16a4a990491	
+47dd44e0-6130-4e43-b383-2d105197b33b	db996934-fd41-481a-95d0-c05a0389158c	2023-06-02	443491bc-6102-4877-840a-e16a4a990491	
+719a8963-6428-4939-aeb3-eafe43ac32d8	3c4bc36a-b979-4970-9a45-446309d0f2a8	2023-06-02	443491bc-6102-4877-840a-e16a4a990491	
+406ec97a-79c9-408a-8db1-c1ba63d952e0	3ad6301b-67dd-4245-92aa-1c4f06b11f04	2023-06-02	443491bc-6102-4877-840a-e16a4a990491	
+9804e106-2b10-49bc-8f60-12d731e20865	950b8607-3275-4255-ae14-758041de7641	2023-06-02	443491bc-6102-4877-840a-e16a4a990491	
+c16b3f90-2102-4461-911f-23f00c7e09f0	3ad6301b-67dd-4245-92aa-1c4f06b11f04	2023-06-02	443491bc-6102-4877-840a-e16a4a990491	
+4cbce72b-c9e6-4e69-a810-01b2a4fe5844	1efeb550-d600-4762-b341-67fd534bad54	2023-06-02	443491bc-6102-4877-840a-e16a4a990491	
+382fed6a-ff2c-422c-8d07-757a6a6ee7d5	d9ad5b8a-417f-4b16-9fdd-58635ffdb7e2	2023-06-02	443491bc-6102-4877-840a-e16a4a990491	
+64ef302b-62c9-4fc9-9b6a-b4ad06cb61ac	5025c55c-708c-40bc-af9a-ed09daa64ec2	2023-06-02	443491bc-6102-4877-840a-e16a4a990491	
+658046ed-7d08-4107-a241-cd86b251aced	e75f9992-abac-485d-ba07-6e10053f586f	2023-06-02	443491bc-6102-4877-840a-e16a4a990491	
+60a2a9a5-e022-40b4-845a-9d6b92618738	f6b9bd7f-fe6a-49a7-ac1a-df5f9ad7caf5	2023-06-02	443491bc-6102-4877-840a-e16a4a990491	
+f7192174-bad6-4c28-af36-24ab034b2d92	db996934-fd41-481a-95d0-c05a0389158c	2023-06-02	443491bc-6102-4877-840a-e16a4a990491	
+58e2eb09-e904-42c8-b939-e8d905df2688	3c4bc36a-b979-4970-9a45-446309d0f2a8	2023-06-02	443491bc-6102-4877-840a-e16a4a990491	
+8da2f367-29c5-46e8-8047-c83992981454	950b8607-3275-4255-ae14-758041de7641	2023-06-02	443491bc-6102-4877-840a-e16a4a990491	
+1f7da85f-2465-40e8-a5b1-04d277c3a1b3	3ad6301b-67dd-4245-92aa-1c4f06b11f04	2023-06-02	443491bc-6102-4877-840a-e16a4a990491	
+de39042f-4094-4f37-a6aa-db6731d09d95	1efeb550-d600-4762-b341-67fd534bad54	2023-06-04	443491bc-6102-4877-840a-e16a4a990491	
+2aebb752-44c4-4bdb-8b60-2a33be8e35cd	d9ad5b8a-417f-4b16-9fdd-58635ffdb7e2	2023-06-04	443491bc-6102-4877-840a-e16a4a990491	
+d2b0d8b5-cc5c-4745-93c2-9716214a59bf	5025c55c-708c-40bc-af9a-ed09daa64ec2	2023-06-04	443491bc-6102-4877-840a-e16a4a990491	
+f596bc07-3882-4153-aad7-d5a682a59046	e75f9992-abac-485d-ba07-6e10053f586f	2023-06-04	443491bc-6102-4877-840a-e16a4a990491	
+d475c98f-c765-4696-abe1-37afbec02104	f6b9bd7f-fe6a-49a7-ac1a-df5f9ad7caf5	2023-06-04	443491bc-6102-4877-840a-e16a4a990491	
+e997ab03-0fcf-496a-b2fd-d06aea54921e	db996934-fd41-481a-95d0-c05a0389158c	2023-06-04	443491bc-6102-4877-840a-e16a4a990491	
+6355b1ba-624f-48c1-896f-aa3522f995c1	3c4bc36a-b979-4970-9a45-446309d0f2a8	2023-06-04	443491bc-6102-4877-840a-e16a4a990491	
+8ebc1095-23a6-491c-8124-aa24fff5f9e0	950b8607-3275-4255-ae14-758041de7641	2023-06-04	443491bc-6102-4877-840a-e16a4a990491	
+5f551ffd-e96d-4693-89c2-fa84fb05cf96	3ad6301b-67dd-4245-92aa-1c4f06b11f04	2023-06-04	443491bc-6102-4877-840a-e16a4a990491	
+\.
+
+
+--
+-- TOC entry 3847 (class 0 OID 25310)
+-- Dependencies: 220
+-- Data for Name: RecordTypes; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public."RecordTypes" ("ID_Type", "Record_Type") FROM stdin;
+443491bc-6102-4877-840a-e16a4a990491	Change
+48b6d732-9875-4235-b4a2-c248eaa1b678	Add
+9519e68c-fa93-40b7-95ff-b359f25cc41b	Out of maintenance
+\.
+
+
+--
+-- TOC entry 3844 (class 0 OID 25161)
+-- Dependencies: 216
+-- Data for Name: Staff; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public."Staff" ("ID_Staff", "FIO", "Phone") FROM stdin;
+72ef3dc6-9408-45b5-af7e-0862b3a8df64	Кульков Дмитрий Александрович	+7(903)111-99-99
+5e0d782a-05bc-4530-9f7f-b9a98b327def	Головин Леонид Олегович	+7(903)111-88-88
+52b7404c-9d83-4aeb-9556-8a24f58c9d01	Михалков Никита Сергеевич	+7(903)111-11-11
+aa10127b-067f-46f0-aa2e-6a123d631de3	АйКак Стас Просто	+7(903)111-33-33
+\.
+
+
+--
+-- TOC entry 3655 (class 2606 OID 25180)
+-- Name: Classrooms Classrooms_Office_Number_key; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Classrooms"
+    ADD CONSTRAINT "Classrooms_Office_Number_key" UNIQUE ("Office_Number");
+
+
+--
+-- TOC entry 3657 (class 2606 OID 25178)
+-- Name: Classrooms Classrooms_pk; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Classrooms"
+    ADD CONSTRAINT "Classrooms_pk" PRIMARY KEY ("ID_Classroom");
+
+
+--
+-- TOC entry 3647 (class 2606 OID 25150)
+-- Name: EquipmentCategories EquipmentCategories_Category_key; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."EquipmentCategories"
+    ADD CONSTRAINT "EquipmentCategories_Category_key" UNIQUE ("Category");
+
+
+--
+-- TOC entry 3649 (class 2606 OID 25148)
+-- Name: EquipmentCategories EquipmentCategories_pk; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."EquipmentCategories"
+    ADD CONSTRAINT "EquipmentCategories_pk" PRIMARY KEY ("ID_Category");
+
+
+--
+-- TOC entry 3659 (class 2606 OID 25254)
+-- Name: Equipment Equipment_Invent_Number_key; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Equipment"
+    ADD CONSTRAINT "Equipment_Invent_Number_key" UNIQUE ("Invent_Number");
+
+
+--
+-- TOC entry 3661 (class 2606 OID 25252)
+-- Name: Equipment Equipment_pk; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Equipment"
+    ADD CONSTRAINT "Equipment_pk" PRIMARY KEY ("ID_Equipment");
+
+
+--
+-- TOC entry 3669 (class 2606 OID 25327)
+-- Name: MaintenanceRecords MaintenanceRecords_pk; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."MaintenanceRecords"
+    ADD CONSTRAINT "MaintenanceRecords_pk" PRIMARY KEY ("ID_Record");
+
+
+--
+-- TOC entry 3664 (class 2606 OID 25319)
+-- Name: RecordTypes RecordTypes_Record_type_key; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."RecordTypes"
+    ADD CONSTRAINT "RecordTypes_Record_type_key" UNIQUE ("Record_Type");
+
+
+--
+-- TOC entry 3666 (class 2606 OID 25317)
+-- Name: RecordTypes RecordTypes_pk; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."RecordTypes"
+    ADD CONSTRAINT "RecordTypes_pk" PRIMARY KEY ("ID_Type");
+
+
+--
+-- TOC entry 3651 (class 2606 OID 25518)
+-- Name: Staff Staff_Phone_key; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Staff"
+    ADD CONSTRAINT "Staff_Phone_key" UNIQUE ("Phone");
+
+
+--
+-- TOC entry 3653 (class 2606 OID 25168)
+-- Name: Staff Staff_pk; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Staff"
+    ADD CONSTRAINT "Staff_pk" PRIMARY KEY ("ID_Staff");
+
+
+--
+-- TOC entry 3645 (class 1259 OID 26012)
+-- Name: Description_GIN_Index; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX "Description_GIN_Index" ON public."EquipmentCategories" USING gin ("Description" public.gin_trgm_ops);
+
+
+--
+-- TOC entry 3667 (class 1259 OID 25822)
+-- Name: ID_Record_Index; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX "ID_Record_Index" ON public."MaintenanceRecords" USING hash ("ID_Record");
+
+
+--
+-- TOC entry 3662 (class 1259 OID 26013)
+-- Name: Invent_Number_BTREE_Index; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX "Invent_Number_BTREE_Index" ON public."Equipment" USING btree ("Invent_Number");
+
+
+--
+-- TOC entry 3670 (class 1259 OID 25930)
+-- Name: Record_Date_BRIN_Index; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX "Record_Date_BRIN_Index" ON public."MaintenanceRecords" USING brin ("Record_Date");
+
+
+--
+-- TOC entry 3676 (class 2620 OID 25404)
+-- Name: Equipment Perform_Maintenance; Type: TRIGGER; Schema: public; Owner: postgres
+--
+
+CREATE TRIGGER "Perform_Maintenance" AFTER INSERT OR UPDATE ON public."Equipment" FOR EACH ROW EXECUTE FUNCTION public."Add_MaintenanceRecord"();
+
+
+--
+-- TOC entry 3677 (class 2620 OID 25818)
+-- Name: 3_b Update_Trigger_For_3_b; Type: TRIGGER; Schema: public; Owner: postgres
+--
+
+CREATE TRIGGER "Update_Trigger_For_3_b" INSTEAD OF UPDATE ON public."3_b" FOR EACH ROW EXECUTE FUNCTION public."Update_3_b"();
+
+
+--
+-- TOC entry 3671 (class 2606 OID 25420)
+-- Name: Classrooms Classrooms_fk0; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Classrooms"
+    ADD CONSTRAINT "Classrooms_fk0" FOREIGN KEY ("Owner") REFERENCES public."Staff"("ID_Staff") ON DELETE RESTRICT;
+
+
+--
+-- TOC entry 3672 (class 2606 OID 25410)
+-- Name: Equipment Equipment_fk0; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Equipment"
+    ADD CONSTRAINT "Equipment_fk0" FOREIGN KEY ("Category") REFERENCES public."EquipmentCategories"("ID_Category") ON DELETE RESTRICT;
+
+
+--
+-- TOC entry 3673 (class 2606 OID 25415)
+-- Name: Equipment Equipment_fk1; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Equipment"
+    ADD CONSTRAINT "Equipment_fk1" FOREIGN KEY ("Location") REFERENCES public."Classrooms"("ID_Classroom") ON DELETE RESTRICT;
+
+
+--
+-- TOC entry 3674 (class 2606 OID 25399)
+-- Name: MaintenanceRecords MaintenanceRecords_fk0; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."MaintenanceRecords"
+    ADD CONSTRAINT "MaintenanceRecords_fk0" FOREIGN KEY ("Equipment") REFERENCES public."Equipment"("ID_Equipment") ON DELETE CASCADE;
+
+
+--
+-- TOC entry 3675 (class 2606 OID 25405)
+-- Name: MaintenanceRecords MaintenanceRecords_fk1; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."MaintenanceRecords"
+    ADD CONSTRAINT "MaintenanceRecords_fk1" FOREIGN KEY ("Record_Type") REFERENCES public."RecordTypes"("ID_Type") ON DELETE RESTRICT;
+
+
+--
+-- TOC entry 3855 (class 0 OID 0)
+-- Dependencies: 218
+-- Name: TABLE "Equipment"; Type: ACL; Schema: public; Owner: postgres
+--
+
+GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE public."Equipment" TO "Equipment_Execute";
+GRANT SELECT ON TABLE public."Equipment" TO "MaintenanceRecords_Execute";
+
+
+--
+-- TOC entry 3856 (class 0 OID 0)
+-- Dependencies: 215
+-- Name: TABLE "EquipmentCategories"; Type: ACL; Schema: public; Owner: postgres
+--
+
+GRANT SELECT ON TABLE public."EquipmentCategories" TO "Equipment_Execute";
+GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE public."EquipmentCategories" TO "EquipmentCategories_Execute";
+
+
+--
+-- TOC entry 3857 (class 0 OID 0)
+-- Dependencies: 217
+-- Name: TABLE "Classrooms"; Type: ACL; Schema: public; Owner: postgres
+--
+
+GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE public."Classrooms" TO "Classrooms_Execute";
+GRANT SELECT ON TABLE public."Classrooms" TO "Equipment_Execute";
+
+
+--
+-- TOC entry 3858 (class 0 OID 0)
+-- Dependencies: 216
+-- Name: TABLE "Staff"; Type: ACL; Schema: public; Owner: postgres
+--
+
+GRANT SELECT ON TABLE public."Staff" TO "Classrooms_Execute";
+GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE public."Staff" TO "Staff_Execute";
+
+
+--
+-- TOC entry 3859 (class 0 OID 0)
+-- Dependencies: 221
+-- Name: TABLE "MaintenanceRecords"; Type: ACL; Schema: public; Owner: postgres
+--
+
+GRANT INSERT ON TABLE public."MaintenanceRecords" TO "Equipment_Execute";
+GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE public."MaintenanceRecords" TO "MaintenanceRecords_Execute";
+
+
+--
+-- TOC entry 3860 (class 0 OID 0)
+-- Dependencies: 220
+-- Name: TABLE "RecordTypes"; Type: ACL; Schema: public; Owner: postgres
+--
+
+GRANT SELECT ON TABLE public."RecordTypes" TO "MaintenanceRecords_Execute";
+GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE public."RecordTypes" TO "RecordTypes_Execute";
+
+
+--
+-- TOC entry 3861 (class 0 OID 0)
+-- Dependencies: 224
+-- Name: TABLE "Classrooms_ClientView"; Type: ACL; Schema: public; Owner: postgres
+--
+
+GRANT SELECT ON TABLE public."Classrooms_ClientView" TO "Classrooms_Read";
+
+
+--
+-- TOC entry 3862 (class 0 OID 0)
+-- Dependencies: 225
+-- Name: TABLE "Classrooms_RawView"; Type: ACL; Schema: public; Owner: postgres
+--
+
+GRANT SELECT ON TABLE public."Classrooms_RawView" TO "Classrooms_Execute";
+
+
+--
+-- TOC entry 3863 (class 0 OID 0)
+-- Dependencies: 227
+-- Name: TABLE "EquipmentCategories_ClientView"; Type: ACL; Schema: public; Owner: postgres
+--
+
+GRANT SELECT ON TABLE public."EquipmentCategories_ClientView" TO "EquipmentCategories_Read";
+
+
+--
+-- TOC entry 3864 (class 0 OID 0)
+-- Dependencies: 219
+-- Name: TABLE "EquipmentCategories_RawView"; Type: ACL; Schema: public; Owner: postgres
+--
+
+GRANT SELECT ON TABLE public."EquipmentCategories_RawView" TO "EquipmentCategories_Execute";
+
+
+--
+-- TOC entry 3865 (class 0 OID 0)
+-- Dependencies: 239
+-- Name: TABLE "Equipment_ClientView"; Type: ACL; Schema: public; Owner: postgres
+--
+
+GRANT SELECT ON TABLE public."Equipment_ClientView" TO "Equipment_Read";
+
+
+--
+-- TOC entry 3866 (class 0 OID 0)
+-- Dependencies: 240
+-- Name: TABLE "Equipment_RawView"; Type: ACL; Schema: public; Owner: postgres
+--
+
+GRANT SELECT ON TABLE public."Equipment_RawView" TO "Equipment_Execute";
+
+
+--
+-- TOC entry 3867 (class 0 OID 0)
+-- Dependencies: 242
+-- Name: TABLE "MaintenanceRecords_ClientView"; Type: ACL; Schema: public; Owner: postgres
+--
+
+GRANT SELECT ON TABLE public."MaintenanceRecords_ClientView" TO "MaintenanceRecords_Read";
+
+
+--
+-- TOC entry 3868 (class 0 OID 0)
+-- Dependencies: 223
+-- Name: TABLE "MaintenanceRecords_RawView"; Type: ACL; Schema: public; Owner: postgres
+--
+
+GRANT SELECT ON TABLE public."MaintenanceRecords_RawView" TO "MaintenanceRecords_Execute";
+
+
+--
+-- TOC entry 3869 (class 0 OID 0)
+-- Dependencies: 226
+-- Name: TABLE "RecordTypes_ClientView"; Type: ACL; Schema: public; Owner: postgres
+--
+
+GRANT SELECT ON TABLE public."RecordTypes_ClientView" TO "RecordTypes_Read";
+
+
+--
+-- TOC entry 3870 (class 0 OID 0)
+-- Dependencies: 222
+-- Name: TABLE "RecordTypes_RawView"; Type: ACL; Schema: public; Owner: postgres
+--
+
+GRANT SELECT ON TABLE public."RecordTypes_RawView" TO "RecordTypes_Execute";
+
+
+--
+-- TOC entry 3871 (class 0 OID 0)
+-- Dependencies: 231
+-- Name: TABLE "Staff_ClientView"; Type: ACL; Schema: public; Owner: postgres
+--
+
+GRANT SELECT ON TABLE public."Staff_ClientView" TO "Staff_Read";
+
+
+--
+-- TOC entry 3872 (class 0 OID 0)
+-- Dependencies: 232
+-- Name: TABLE "Staff_RawView"; Type: ACL; Schema: public; Owner: postgres
+--
+
+GRANT SELECT ON TABLE public."Staff_RawView" TO "Staff_Execute";
+
+
+-- Completed on 2023-06-07 22:01:36 MSK
+
+--
+-- PostgreSQL database dump complete
+--
+

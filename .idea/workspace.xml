@@ -4,10 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="8703f918-a2fa-4c3a-922d-0fd6c14d1db5" name="Changes" comment="Added logging with slf4j2 and log4j2">
+    <list default="true" id="8703f918-a2fa-4c3a-922d-0fd6c14d1db5" name="Changes" comment="Cleaned up log4j2 properties">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/LearningAutopilot/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/log4j2.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/log4j2.properties" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -176,7 +174,7 @@
       <workItem from="1682327723230" duration="53545000" />
       <workItem from="1682683169767" duration="52939000" />
       <workItem from="1683743390497" duration="227959000" />
-      <workItem from="1685741657314" duration="17972000" />
+      <workItem from="1685741657314" duration="21592000" />
     </task>
     <task id="LOCAL-00001" summary="Empty main Frame with proper width, height and screen position created">
       <created>1682273847054</created>
@@ -430,7 +428,14 @@
       <option name="project" value="LOCAL" />
       <updated>1685994218798</updated>
     </task>
-    <option name="localTasksCounter" value="37" />
+    <task id="LOCAL-00037" summary="Cleaned up log4j2 properties">
+      <created>1686078854087</created>
+      <option name="number" value="00037" />
+      <option name="presentableId" value="LOCAL-00037" />
+      <option name="project" value="LOCAL" />
+      <updated>1686078854087</updated>
+    </task>
+    <option name="localTasksCounter" value="38" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -454,7 +459,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Working build before implementing event handler" />
     <MESSAGE value="Added Dialog for Update/Insert. Implemented SQL helper for requests strings storage and query consistency among multiple classes." />
     <MESSAGE value="Added missing icons for table" />
     <MESSAGE value="Hardcoded buttons in DatabaseInteractionForm to complete transition to ITableSQLHelper model" />
@@ -479,7 +483,8 @@
     <MESSAGE value="Change naming a bit for more readability" />
     <MESSAGE value="Added button for recalculating balance cost in Equipment table" />
     <MESSAGE value="Added logging with slf4j2 and log4j2" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added logging with slf4j2 and log4j2" />
+    <MESSAGE value="Cleaned up log4j2 properties" />
+    <option name="LAST_COMMIT_MESSAGE" value="Cleaned up log4j2 properties" />
   </component>
   <component name="XDebuggerManager">
     <pin-to-top-manager>
